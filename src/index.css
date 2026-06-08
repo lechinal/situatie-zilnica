@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #f8fafc; font-family: 'Inter', sans-serif; }
+
+@keyframes slideUp     { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn     { from { opacity: 0; transform: scale(.95); }      to { opacity: 1; transform: scale(1); } }
+@keyframes slideInLeft { from { transform: translateX(-100%); }           to { transform: translateX(0); } }
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #14b8a6 !important;
+  box-shadow: 0 0 0 3px rgba(20,184,166,.12);
+}
+button:active { transform: scale(.97); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+
+/* Layout */
+.cad-topbar  { display: none !important; }
+.cad-sidebar { display: flex; width: 210px; }
+.cad-main    { padding-top: 0; }
+
+@media (max-width: 640px) {
+  .cad-topbar  { display: flex !important; }
+  .cad-sidebar { display: none !important; }
+  .cad-main    { padding-top: 60px; }
+}
+@media (min-width: 1024px) {
+  .cad-sidebar { width: 240px; }
+}
+@media (min-width: 1280px) {
+  .cad-sidebar { width: 260px; }
+}
+
+/* Sector 2-col layout pe desktop */
+@media (min-width: 900px) {
+  .cad-sector-2col {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* Logo responsive */
+.cad-logo-img  { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.cad-logo-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #1e293b; letter-spacing: -0.2px; line-height: 1.2; font-size: 13px; }
+.cad-logo-sub  { font-family: 'Inter', sans-serif; color: #94a3b8; margin-top: 1px; font-size: 10px; }
+@media (min-width: 768px) {
+  .cad-logo-img  { width: 40px; height: 40px; border-radius: 10px; }
+  .cad-logo-name { font-size: 14px; }
+  .cad-logo-sub  { font-size: 11px; }
+}
+@media (min-width: 1024px) {
+  .cad-logo-img  { width: 46px; height: 46px; border-radius: 12px; }
+  .cad-logo-name { font-size: 15px; }
+  .cad-logo-sub  { font-size: 11px; }
+}
+@media (min-width: 1280px) {
+  .cad-logo-img  { width: 50px; height: 50px; }
+  .cad-logo-name { font-size: 16px; }
+}
+
+/* Stats 3 coloane pe desktop */
+@media (min-width: 1024px) {
+  .cad-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .cad-stats-row > div { margin-bottom: 0 !important; }
+}
