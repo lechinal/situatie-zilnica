@@ -30,7 +30,7 @@ export default function SectorForm({ isOpen, onClose, localityId, editSector }) 
       footer={<><Btn variant="secondary" onClick={onClose}>Anulează</Btn><Btn onClick={submit}>{editSector ? "Salvează" : "Creează"}</Btn></>}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
         <Field label="Nr. Sector *" error={err.sectorNumber}>
-          <Input value={form.sectorNumber} onChange={e => setForm(p => ({ ...p, sectorNumber: e.target.value }))} placeholder="ex: 53" error={err.sectorNumber} autoFocus />
+          <Input value={form.sectorNumber} onChange={e => setForm(p => ({ ...p, sectorNumber: e.target.value }))} onKeyDown={e => e.key === "Enter" && submit()} placeholder="ex: 53" error={err.sectorNumber} autoFocus />
         </Field>
         <Field label="Tip zonă">
           <Select value={form.zoneType} onChange={e => setForm(p => ({ ...p, zoneType: e.target.value }))}>

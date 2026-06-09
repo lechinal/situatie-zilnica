@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MapPin, Plus } from "lucide-react";
 import { useApp } from "../context/AppContext.jsx";
 import { Btn, StatMini, Empty, Breadcrumb, BackBtn } from "../components/ui/index.jsx";
 import SectorCard from "../components/SectorCard.jsx";
@@ -12,9 +13,9 @@ export default function LocalityPage({ financeId, uatId, localityId, onNav }) {
   const uat      = getUatById(uatId);
   const locality = getLocalityById(localityId);
   const sectors  = getSectorsByLocality(localityId);
-  const [showForm,   setShowForm]   = useState(false);
-  const [editS,      setEditS]      = useState(null);
-  const [actSector,  setActSector]  = useState(null);
+  const [showForm,  setShowForm]  = useState(false);
+  const [editS,     setEditS]     = useState(null);
+  const [actSector, setActSector] = useState(null);
 
   if (!locality) return <div style={{ padding: 24 }}><Btn variant="secondary" onClick={() => onNav("uat", { financeId, uatId })}>← Înapoi</Btn></div>;
 
@@ -34,20 +35,20 @@ export default function LocalityPage({ financeId, uatId, localityId, onNav }) {
             <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>UAT {uat?.name} · {finance?.name}</p>
           </div>
         </div>
-        <Btn onClick={() => { setEditS(null); setShowForm(true); }}>+ Sector nou</Btn>
+        <Btn onClick={() => { setEditS(null); setShowForm(true); }}><Plus size={15} /> Sector nou</Btn>
       </div>
 
       {sectors.length > 0 && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 10, marginBottom: 22 }}>
-          <StatMini label="Sectoare"      value={sectors.length}                                                            color="teal" />
-          <StatMini label="Progres mediu" value={`${avgProgress(sectors)}%`}                                                color="blue" />
-          <StatMini label="Active"        value={sectors.filter(s => ["În lucru","Completări"].includes(s.status)).length}  color="amber" />
-          <StatMini label="Finalizate"    value={sectors.filter(s => s.status === "Finalizat").length}                      color="emerald" />
+          <StatMini label="Sectoare"      value={sectors.length}                                                           color="teal" />
+          <StatMini label="Progres mediu" value={`${avgProgress(sectors)}%`}                                               color="blue" />
+          <StatMini label="Active"        value={sectors.filter(s => ["În lucru","Completări"].includes(s.status)).length} color="amber" />
+          <StatMini label="Finalizate"    value={sectors.filter(s => s.status === "Finalizat").length}                     color="emerald" />
         </div>
       )}
 
       {sectors.length === 0
-        ? <Empty icon="📍" title="Niciun sector" subtitle="Adaugă primul sector pentru această localitate." action={<Btn onClick={() => setShowForm(true)}>+ Adaugă sector</Btn>} />
+        ? <Empty icon={MapPin} title="Niciun sector" subtitle="Adaugă primul sector pentru această localitate." action={<Btn onClick={() => setShowForm(true)}><Plus size={15} /> Adaugă sector</Btn>} />
         : <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 14 }}>
             {sectors.map(s => (
               <SectorCard key={s.id} sector={s}

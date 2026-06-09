@@ -1,6 +1,18 @@
+import { Sun, CalendarDays, Calendar, BarChart2, Folder } from "lucide-react";
 import { useApp } from "../context/AppContext.jsx";
 import { StatMini } from "../components/ui/index.jsx";
 import { formatHours, fmtDateLong } from "../utils/format.js";
+
+function SectionTitle({ icon: Icon, color, bg, children }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+      <div style={{ width: 30, height: 30, borderRadius: 8, background: bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <Icon size={15} color={color} strokeWidth={2} />
+      </div>
+      <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 600, fontSize: 16, color: "#334155", margin: 0 }}>{children}</h2>
+    </div>
+  );
+}
 
 export default function StatisticsPage() {
   const { activities, sectors, finances, uats, localities } = useApp();
@@ -23,15 +35,21 @@ export default function StatisticsPage() {
   const monthActs = activities.filter(a => new Date(a.date + "T12:00:00") >= monthStart);
 
   const items = ({ count, buildings, fieldH, travelH, officeH }, noTravel = false) => [
-    { l: "Activități", v: count,                c: "teal"   },
-    { l: "Imobile",    v: buildings,            c: "amber"  },
-    { l: "Ore teren",  v: formatHours(fieldH),  c: "teal"   },
+    { l: "Activități", v: count,                c: "teal"  },
+    { l: "Imobile",    v: buildings,            c: "amber" },
+    { l: "Ore teren",  v: formatHours(fieldH),  c: "teal"  },
     ...(!noTravel ? [{ l: "Deplasare", v: formatHours(travelH), c: "blue" }] : []),
-    { l: "Ore birou",  v: formatHours(officeH), c: "slate"  },
+    { l: "Ore birou",  v: formatHours(officeH), c: "slate" },
   ];
 
   const statusCounts = sectors.reduce((acc, s) => { acc[s.status] = (acc[s.status] || 0) + 1; return acc; }, {});
   const SC = { "Neînceput": "slate", "În lucru": "blue", "Completări": "amber", "La unit": "purple", "La verificat": "amber", "Finalizat": "emerald" };
+
+  const periods = [
+    { title: "Astăzi",             Icon: Sun,         color: "#d97706", bg: "#fffbeb", stats: calc(todayActs), noT: false },
+    { title: "Săptămâna curentă",  Icon: CalendarDays, color: "#2563eb", bg: "#eff6ff", stats: calc(weekActs),  noT: true  },
+    { title: "Luna curentă",       Icon: Calendar,    color: "#9333ea", bg: "#faf5ff", stats: calc(monthActs), noT: false },
+  ];
 
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 24px" }}>
@@ -39,9 +57,9 @@ export default function StatisticsPage() {
       <p style={{ fontSize: 13, color: "#94a3b8", marginBottom: 24 }}>{fmtDateLong(now.toISOString())}</p>
 
       <div className="cad-stats-row">
-        {[["☀️ Astăzi", calc(todayActs), false], ["📅 Săptămâna curentă", calc(weekActs), true], ["📆 Luna curentă", calc(monthActs), false]].map(([title, stats, noT]) => (
+        {periods.map(({ title, Icon, color, bg, stats, noT }) => (
           <div key={title} style={{ background: "#fff", borderRadius: 20, border: "1px solid #f1f5f9", padding: 20, marginBottom: 14 }}>
-            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 600, fontSize: 16, color: "#334155", marginBottom: 14, marginTop: 0 }}>{title}</h2>
+            <SectionTitle icon={Icon} color={color} bg={bg}>{title}</SectionTitle>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(100px,1fr))", gap: 10 }}>
               {items(stats, noT).map(s => <StatMini key={s.l} label={s.l} value={s.v} color={s.c} />)}
             </div>
@@ -50,7 +68,7 @@ export default function StatisticsPage() {
       </div>
 
       <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #f1f5f9", padding: 20, marginBottom: 14 }}>
-        <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 600, fontSize: 16, color: "#334155", marginBottom: 14, marginTop: 0 }}>📊 Situație sectoare</h2>
+        <SectionTitle icon={BarChart2} color="#0d9488" bg="#f0fdfa">Situație sectoare</SectionTitle>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 10 }}>
           {Object.entries(statusCounts).map(([status, count]) => <StatMini key={status} label={status} value={count} color={SC[status] || "slate"} />)}
           <StatMini label="Total" value={sectors.length} color="teal" />
@@ -59,7 +77,7 @@ export default function StatisticsPage() {
 
       {finances.length > 0 && (
         <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #f1f5f9", padding: 20 }}>
-          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 600, fontSize: 16, color: "#334155", marginBottom: 14, marginTop: 0 }}>📁 Per finanțare</h2>
+          <SectionTitle icon={Folder} color="#0d9488" bg="#f0fdfa">Per finanțare</SectionTitle>
           {finances.map(fin => {
             const fUatIds = uats.filter(u => u.financeId === fin.id).map(u => u.id);
             const fLocIds = localities.filter(l => fUatIds.includes(l.uatId)).map(l => l.id);

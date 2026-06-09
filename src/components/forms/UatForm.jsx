@@ -22,7 +22,7 @@ export default function UatForm({ isOpen, onClose, financeId, editUat }) {
     <Modal isOpen={isOpen} onClose={onClose} title={editUat ? "Editează UAT" : "UAT nou"}
       footer={<><Btn variant="secondary" onClick={onClose}>Anulează</Btn><Btn onClick={submit}>{editUat ? "Salvează" : "Creează"}</Btn></>}>
       <Field label="Nume UAT *" error={err.name}>
-        <Input value={form.name} onChange={e => setForm({ name: e.target.value })} placeholder="ex: Ohaba" error={err.name} autoFocus />
+        <Input value={form.name} onChange={e => setForm({ name: e.target.value })} onKeyDown={e => e.key === "Enter" && submit()} placeholder="ex: Ohaba" error={err.name} autoFocus />
       </Field>
     </Modal>
   );

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Home, Plus } from "lucide-react";
 import { useApp } from "../context/AppContext.jsx";
 import { Btn, StatMini, Empty, Breadcrumb, BackBtn } from "../components/ui/index.jsx";
 import HierarchyCard from "../components/HierarchyCard.jsx";
@@ -32,7 +33,7 @@ export default function UatPage({ financeId, uatId, onNav }) {
             <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>{finance?.name}</p>
           </div>
         </div>
-        <Btn onClick={() => { setEditL(null); setShowForm(true); }}>+ Localitate nouă</Btn>
+        <Btn onClick={() => { setEditL(null); setShowForm(true); }}><Plus size={15} /> Localitate nouă</Btn>
       </div>
 
       {localities.length > 0 && (
@@ -45,12 +46,12 @@ export default function UatPage({ financeId, uatId, onNav }) {
       )}
 
       {localities.length === 0
-        ? <Empty icon="🏠" title="Nicio localitate" subtitle="Adaugă prima localitate pentru acest UAT." action={<Btn onClick={() => setShowForm(true)}>+ Adaugă localitate</Btn>} />
+        ? <Empty icon={Home} title="Nicio localitate" subtitle="Adaugă prima localitate pentru acest UAT." action={<Btn onClick={() => setShowForm(true)}><Plus size={15} /> Adaugă localitate</Btn>} />
         : <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 14 }}>
             {localities.map(l => {
               const lSectors = getSectorsByLocality(l.id);
               return (
-                <HierarchyCard key={l.id} icon="🏠" title={l.name} accentColor="#9333ea"
+                <HierarchyCard key={l.id} icon={Home} title={l.name} accentColor="#9333ea"
                   stats={[`${lSectors.length} sectoare`, `Progres ${avgProgress(lSectors)}%`, `${lSectors.filter(s => s.status === "Finalizat").length} finalizate`]}
                   onSelect={() => onNav("locality", { financeId, uatId, localityId: l.id })}
                   onEdit={() => { setEditL(l); setShowForm(true); }}

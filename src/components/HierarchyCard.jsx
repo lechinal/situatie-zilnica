@@ -1,16 +1,15 @@
 import { useState, useEffect, useRef } from "react";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { ConfirmDialog } from "./ui/index.jsx";
 
-export default function HierarchyCard({ icon, title, subtitle, stats, onSelect, onEdit, onDelete, confirmMsg, accentColor = "#0d9488" }) {
+export default function HierarchyCard({ icon: Icon, title, subtitle, stats, onSelect, onEdit, onDelete, confirmMsg, accentColor = "#0d9488" }) {
   const [menu, setMenu] = useState(false);
   const [del,  setDel]  = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
     if (!menu) return;
-    const handler = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) setMenu(false);
-    };
+    const handler = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenu(false); };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [menu]);
@@ -25,14 +24,17 @@ export default function HierarchyCard({ icon, title, subtitle, stats, onSelect, 
         <div style={{ padding: "16px 16px 16px 20px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div style={{ display: "flex", gap: 10, alignItems: "center", flex: 1, minWidth: 0 }}>
-              <div style={{ width: 38, height: 38, borderRadius: 12, background: accentColor + "18", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{icon}</div>
+              <div style={{ width: 38, height: 38, borderRadius: 12, background: accentColor + "18", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <Icon size={20} color={accentColor} strokeWidth={2} />
+              </div>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 600, fontSize: 15, color: "#1e293b", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", letterSpacing: "-0.1px" }}>{title}</div>
                 {subtitle && <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>{subtitle}</div>}
               </div>
             </div>
-            <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }}
-              style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", padding: 4, flexShrink: 0 }}>⋯</button>
+            <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }} className="cad-icon-btn">
+              <MoreHorizontal size={18} />
+            </button>
           </div>
           {stats && stats.length > 0 && (
             <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
@@ -43,9 +45,17 @@ export default function HierarchyCard({ icon, title, subtitle, stats, onSelect, 
           )}
         </div>
         {menu && (
-          <div ref={menuRef} onClick={e => e.stopPropagation()} style={{ position: "absolute", top: 44, right: 10, background: "#fff", borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,.12)", border: "1px solid #f1f5f9", zIndex: 50, minWidth: 140 }}>
-            <button onClick={() => { setMenu(false); onEdit(); }} style={{ display: "flex", gap: 8, alignItems: "center", width: "100%", padding: "10px 14px", background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#334155" }}>✏️ Editează</button>
-            <button onClick={() => { setMenu(false); setDel(true); }} style={{ display: "flex", gap: 8, alignItems: "center", width: "100%", padding: "10px 14px", background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#dc2626" }}>🗑 Șterge</button>
+          <div ref={menuRef} onClick={e => e.stopPropagation()} style={{ position: "absolute", top: 44, right: 10, background: "#fff", borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,.12)", border: "1px solid #f1f5f9", zIndex: 50, minWidth: 140, overflow: "hidden" }}>
+            <button onClick={() => { setMenu(false); onEdit(); }} style={{ display: "flex", gap: 8, alignItems: "center", width: "100%", padding: "10px 14px", background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#334155", transition: "background .12s" }}
+              onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+              onMouseLeave={e => e.currentTarget.style.background = "none"}>
+              <Pencil size={14} /> Editează
+            </button>
+            <button onClick={() => { setMenu(false); setDel(true); }} style={{ display: "flex", gap: 8, alignItems: "center", width: "100%", padding: "10px 14px", background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#dc2626", transition: "background .12s" }}
+              onMouseEnter={e => e.currentTarget.style.background = "#fef2f2"}
+              onMouseLeave={e => e.currentTarget.style.background = "none"}>
+              <Trash2 size={14} /> Șterge
+            </button>
           </div>
         )}
       </div>

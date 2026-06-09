@@ -22,10 +22,10 @@ export default function FinanceForm({ isOpen, onClose, editFinance }) {
     <Modal isOpen={isOpen} onClose={onClose} title={editFinance ? "Editează finanțarea" : "Finanțare nouă"}
       footer={<><Btn variant="secondary" onClick={onClose}>Anulează</Btn><Btn onClick={submit}>{editFinance ? "Salvează" : "Creează"}</Btn></>}>
       <Field label="Nume *" error={err.name}>
-        <Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} placeholder="ex: Finanțare 13" error={err.name} autoFocus />
+        <Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} onKeyDown={e => e.key === "Enter" && submit()} placeholder="ex: Finanțare 13" error={err.name} autoFocus />
       </Field>
       <Field label="Descriere (opțional)">
-        <Textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} placeholder="Detalii..." />
+        <Textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} onKeyDown={e => e.key === "Enter" && !e.shiftKey && submit()} placeholder="Detalii..." />
       </Field>
     </Modal>
   );

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Folder, Plus } from "lucide-react";
 import { useApp } from "../context/AppContext.jsx";
 import { Btn, StatMini, Empty } from "../components/ui/index.jsx";
 import FinanceCard from "../components/FinanceCard.jsx";
@@ -22,7 +23,7 @@ export default function DashboardPage({ onNav }) {
           <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 30, color: "#1e293b", margin: 0, letterSpacing: "-0.5px" }}>Dashboard</h1>
           <p style={{ fontSize: 13, color: "#94a3b8", marginTop: 4 }}>{fmtDateLong(new Date().toISOString())}</p>
         </div>
-        <Btn onClick={() => { setEditF(null); setShowForm(true); }}>+ Finanțare nouă</Btn>
+        <Btn onClick={() => { setEditF(null); setShowForm(true); }}><Plus size={15} /> Finanțare nouă</Btn>
       </div>
 
       {finances.length > 0 && (
@@ -35,7 +36,7 @@ export default function DashboardPage({ onNav }) {
       )}
 
       {finances.length === 0
-        ? <Empty icon="📁" title="Nicio finanțare" subtitle="Creează prima finanțare pentru a începe." action={<Btn onClick={() => setShowForm(true)}>+ Creează finanțare</Btn>} />
+        ? <Empty icon={Folder} title="Nicio finanțare" subtitle="Creează prima finanțare pentru a începe." action={<Btn onClick={() => setShowForm(true)}><Plus size={15} /> Creează finanțare</Btn>} />
         : <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 16 }}>
             {finances.map(f => (
               <FinanceCard key={f.id} finance={f}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApp } from "../context/AppContext.jsx";
+import { ClipboardList, MessageCircle, Check, Plus } from "lucide-react";
 import { Btn, StatMini, Empty, Breadcrumb, BackBtn, StatusBadge, ProgressBar } from "../components/ui/index.jsx";
 import ActivityItem from "../components/ActivityItem.jsx";
 import SectorForm from "../components/forms/SectorForm.jsx";
@@ -50,8 +51,8 @@ export default function SectorPage({ financeId, uatId, localityId, sectorId, onN
           </div>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
-          <Btn variant="ghost" onClick={() => setShowEdit(true)}>✏️ Editează</Btn>
-          <Btn onClick={() => setShowAct(true)}>+ Activitate</Btn>
+          <Btn variant="ghost" onClick={() => setShowEdit(true)}>Editează</Btn>
+          <Btn onClick={() => setShowAct(true)}><Plus size={15} /> Activitate</Btn>
         </div>
       </div>
 
@@ -96,13 +97,15 @@ export default function SectorPage({ financeId, uatId, localityId, sectorId, onN
               Istoric activități <span style={{ fontSize: 14, fontWeight: 400, color: "#94a3b8" }}>({acts.length})</span>
             </h2>
             {acts.length > 0 && (
-              <button onClick={copyAll} style={{ display: "flex", gap: 6, alignItems: "center", fontSize: 11, fontWeight: 700, padding: "5px 12px", borderRadius: 8, cursor: "pointer", border: "none", fontFamily: "inherit", background: copiedAll ? "#d1fae5" : "#f1f5f9", color: copiedAll ? "#059669" : "#475569", transition: "all .15s" }}>
-                {copiedAll ? "✓ Copiat!" : "💬 Copiază tot"}
+              <button onClick={copyAll} style={{ display: "flex", gap: 6, alignItems: "center", fontSize: 11, fontWeight: 700, padding: "5px 12px", borderRadius: 8, cursor: "pointer", border: "none", fontFamily: "inherit", background: copiedAll ? "#d1fae5" : "#f1f5f9", color: copiedAll ? "#059669" : "#475569", transition: "all .15s" }}
+                onMouseEnter={e => { if (!copiedAll) e.currentTarget.style.background = "#e2e8f0"; }}
+                onMouseLeave={e => { if (!copiedAll) e.currentTarget.style.background = "#f1f5f9"; }}>
+                {copiedAll ? <><Check size={12} /> Copiat!</> : <><MessageCircle size={12} /> Copiază tot</>}
               </button>
             )}
           </div>
           {acts.length === 0
-            ? <Empty icon="📋" title="Nicio activitate" subtitle="Adaugă prima activitate pentru acest sector." />
+            ? <Empty icon={ClipboardList} title="Nicio activitate" subtitle="Adaugă prima activitate pentru acest sector." />
             : <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {acts.map(a => <ActivityItem key={a.id} activity={a} sector={sector} locality={locality} uat={uat} finance={finance} />)}
               </div>

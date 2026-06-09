@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Building2, Plus } from "lucide-react";
 import { useApp } from "../context/AppContext.jsx";
 import { Btn, StatMini, Empty, Breadcrumb, BackBtn } from "../components/ui/index.jsx";
 import HierarchyCard from "../components/HierarchyCard.jsx";
@@ -26,7 +27,7 @@ export default function FinancePage({ financeId, onNav }) {
             {finance.description && <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>{finance.description}</p>}
           </div>
         </div>
-        <Btn onClick={() => { setEditU(null); setShowForm(true); }}>+ UAT nou</Btn>
+        <Btn onClick={() => { setEditU(null); setShowForm(true); }}><Plus size={15} /> UAT nou</Btn>
       </div>
 
       {uats.length > 0 && (
@@ -39,14 +40,14 @@ export default function FinancePage({ financeId, onNav }) {
       )}
 
       {uats.length === 0
-        ? <Empty icon="🏘️" title="Niciun UAT" subtitle="Adaugă primul UAT pentru această finanțare." action={<Btn onClick={() => setShowForm(true)}>+ Adaugă UAT</Btn>} />
+        ? <Empty icon={Building2} title="Niciun UAT" subtitle="Adaugă primul UAT pentru această finanțare." action={<Btn onClick={() => setShowForm(true)}><Plus size={15} /> Adaugă UAT</Btn>} />
         : <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 14 }}>
             {uats.map(u => {
               const uatLocs    = localities.filter(l => l.uatId === u.id);
               const uatLocIds  = uatLocs.map(l => l.id);
               const uatSectors = allSectors.filter(s => uatLocIds.includes(s.localityId));
               return (
-                <HierarchyCard key={u.id} icon="🏘️" title={u.name} accentColor="#2563eb"
+                <HierarchyCard key={u.id} icon={Building2} title={u.name} accentColor="#2563eb"
                   stats={[`${uatLocs.length} localități`, `${uatSectors.length} sectoare`, `Progres ${avgProgress(uatSectors)}%`]}
                   onSelect={() => onNav("uat", { financeId, uatId: u.id })}
                   onEdit={() => { setEditU(u); setShowForm(true); }}

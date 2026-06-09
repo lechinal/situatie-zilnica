@@ -22,7 +22,7 @@ export default function LocalityForm({ isOpen, onClose, uatId, editLocality }) {
     <Modal isOpen={isOpen} onClose={onClose} title={editLocality ? "Editează localitate" : "Localitate nouă"}
       footer={<><Btn variant="secondary" onClick={onClose}>Anulează</Btn><Btn onClick={submit}>{editLocality ? "Salvează" : "Creează"}</Btn></>}>
       <Field label="Nume localitate *" error={err.name}>
-        <Input value={form.name} onChange={e => setForm({ name: e.target.value })} placeholder="ex: Secașel" error={err.name} autoFocus />
+        <Input value={form.name} onChange={e => setForm({ name: e.target.value })} onKeyDown={e => e.key === "Enter" && submit()} placeholder="ex: Secașel" error={err.name} autoFocus />
       </Field>
     </Modal>
   );

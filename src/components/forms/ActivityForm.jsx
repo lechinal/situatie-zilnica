@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { Map, Monitor, Pencil, Clock, Plus, X, Zap, Save, Mountain, Car } from "lucide-react";
 import { useApp } from "../../context/AppContext.jsx";
-import { Modal, Field, Input, Select, Textarea, Btn } from "../ui/index.jsx";
+import { Modal, Field, Input, Select, Textarea, Btn, DateInput } from "../ui/index.jsx";
 import { STATUS_OPTIONS, INTERVENTION_TYPES, EXTRA_ELEMENTS, OFFICE_TYPES, QUICK_OBS } from "../../utils/constants.js";
 import { calcNewProgress, calcBetween, formatHours } from "../../utils/format.js";
 
@@ -57,10 +58,10 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
     <Modal isOpen={isOpen} onClose={onClose} title="Activitate nouă"
       subtitle={`${finance?.name} · ${uat?.name} · ${locality?.name} · Sector ${sector?.sectorNumber}`}
       maxWidth={600}
-      footer={<><Btn variant="secondary" onClick={onClose}>Anulează</Btn><Btn onClick={submit} style={{ flex: 1, justifyContent: "center" }}>💾 Salvează activitatea</Btn></>}>
+      footer={<><Btn variant="secondary" onClick={onClose}>Anulează</Btn><Btn onClick={submit} style={{ flex: 1, justifyContent: "center" }}><Save size={14} /> Salvează activitatea</Btn></>}>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 4 }}>
-        <Field label="Data"><Input type="date" value={f.date} onChange={e => setF(p => ({ ...p, date: e.target.value }))} /></Field>
+        <Field label="Data"><DateInput value={f.date} onChange={v => setF(p => ({ ...p, date: v }))} /></Field>
         <Field label="Status sector">
           <Select value={f.sectorStatus} onChange={e => setF(p => ({ ...p, sectorStatus: e.target.value }))}>
             {STATUS_OPTIONS.map(s => <option key={s}>{s}</option>)}
@@ -93,8 +94,8 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
       {/* TEREN */}
       <div style={secStyle}>
         <button type="button" style={secHead} onClick={() => setF(p => ({ ...p, fieldEnabled: !p.fieldEnabled }))}>
-          <span>🗺️ Activitate teren {f.fieldEnabled && <span style={{ fontSize: 9, background: "#ccfbf1", color: "#0d9488", padding: "1px 8px", borderRadius: 20, marginLeft: 6 }}>ACTIV</span>}</span>
-          <span style={{ color: "#94a3b8" }}>{f.fieldEnabled ? "▲" : "▼"}</span>
+          <span style={{ display: "flex", alignItems: "center", gap: 8 }}><Map size={15} /> Activitate teren {f.fieldEnabled && <span style={{ fontSize: 9, background: "#ccfbf1", color: "#0d9488", padding: "1px 8px", borderRadius: 20 }}>ACTIV</span>}</span>
+          <span style={{ color: "#94a3b8", fontSize: 10 }}>{f.fieldEnabled ? "▲" : "▼"}</span>
         </button>
         {f.fieldEnabled && (
           <div style={{ padding: "0 14px 14px", borderTop: "1px solid #f1f5f9" }}>
@@ -117,13 +118,17 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
                   <div key={i} style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 6 }}>
                     <span style={{ flex: 1, fontSize: 12, background: "#f8fafc", padding: "7px 10px", borderRadius: 8, color: "#334155" }}>{el.type}</span>
                     <Input type="number" min="0" step="0.1" value={el.km} onChange={e => { const c = [...f.extravilanElements]; c[i] = { ...c[i], km: e.target.value }; setF(p => ({ ...p, extravilanElements: c })); }} placeholder="km" style={{ width: 80 }} />
-                    <button type="button" onClick={() => removeExtra(i)} style={{ background: "none", border: "none", cursor: "pointer", color: "#dc2626", padding: 4 }}>✕</button>
+                    <button type="button" onClick={() => removeExtra(i)} className="cad-icon-btn cad-icon-btn-danger"><X size={14} /></button>
                   </div>
                 ))}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 6 }}>
                   {EXTRA_ELEMENTS.map(el => (
                     <button key={el} type="button" onClick={() => addExtra(el)}
-                      style={{ fontSize: 11, background: "#f1f5f9", border: "none", borderRadius: 8, padding: "4px 10px", cursor: "pointer", color: "#475569", fontFamily: "inherit" }}>+ {el}</button>
+                      style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, background: "#f1f5f9", border: "none", borderRadius: 8, padding: "4px 10px", cursor: "pointer", color: "#475569", fontFamily: "inherit", transition: "background .12s" }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#e2e8f0"}
+                      onMouseLeave={e => e.currentTarget.style.background = "#f1f5f9"}>
+                      <Plus size={11} />{el}
+                    </button>
                   ))}
                 </div>
               </Field>
@@ -134,7 +139,7 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
                 {["manual", "auto"].map(m => (
                   <button key={m} type="button" onClick={() => setF(p => ({ ...p, timeMode: m }))}
                     style={{ flex: 1, padding: "7px", borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "none", background: f.timeMode === m ? "#1e293b" : "#f1f5f9", color: f.timeMode === m ? "#fff" : "#334155", fontFamily: "inherit" }}>
-                    {m === "manual" ? "✏️ Manual" : "🕐 Automat"}
+                    {m === "manual" ? <><Pencil size={12} /> Manual</> : <><Clock size={12} /> Automat</>}
                   </button>
                 ))}
               </div>
@@ -175,8 +180,8 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
       {/* BIROU */}
       <div style={secStyle}>
         <button type="button" style={secHead} onClick={() => setF(p => ({ ...p, officeEnabled: !p.officeEnabled }))}>
-          <span>🖥️ Activitate birou {f.officeEnabled && <span style={{ fontSize: 9, background: "#dbeafe", color: "#2563eb", padding: "1px 8px", borderRadius: 20, marginLeft: 6 }}>ACTIV</span>}</span>
-          <span style={{ color: "#94a3b8" }}>{f.officeEnabled ? "▲" : "▼"}</span>
+          <span style={{ display: "flex", alignItems: "center", gap: 8 }}><Monitor size={15} /> Activitate birou {f.officeEnabled && <span style={{ fontSize: 9, background: "#dbeafe", color: "#2563eb", padding: "1px 8px", borderRadius: 20 }}>ACTIV</span>}</span>
+          <span style={{ color: "#94a3b8", fontSize: 10 }}>{f.officeEnabled ? "▲" : "▼"}</span>
         </button>
         {f.officeEnabled && (
           <div style={{ padding: "0 14px 14px", borderTop: "1px solid #f1f5f9" }}>
@@ -199,7 +204,7 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
                 {["manual", "auto"].map(m => (
                   <button key={m} type="button" onClick={() => setF(p => ({ ...p, officetimeMode: m }))}
                     style={{ flex: 1, padding: "7px", borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "none", background: f.officetimeMode === m ? "#1e293b" : "#f1f5f9", color: f.officetimeMode === m ? "#fff" : "#334155", fontFamily: "inherit" }}>
-                    {m === "manual" ? "✏️ Manual" : "🕐 Automat"}
+                    {m === "manual" ? <><Pencil size={12} /> Manual</> : <><Clock size={12} /> Automat</>}
                   </button>
                 ))}
               </div>
@@ -219,7 +224,11 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
           {QUICK_OBS.map(obs => (
             <button key={obs} type="button" onClick={() => setF(p => ({ ...p, observations: p.observations ? p.observations + ". " + obs : obs }))}
-              style={{ fontSize: 11, background: "#f1f5f9", border: "none", borderRadius: 20, padding: "4px 10px", cursor: "pointer", color: "#475569", fontFamily: "inherit" }}>⚡ {obs}</button>
+              style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, background: "#f1f5f9", border: "none", borderRadius: 20, padding: "4px 10px", cursor: "pointer", color: "#475569", fontFamily: "inherit", transition: "background .12s" }}
+              onMouseEnter={e => e.currentTarget.style.background = "#e2e8f0"}
+              onMouseLeave={e => e.currentTarget.style.background = "#f1f5f9"}>
+              <Zap size={10} />{obs}
+            </button>
           ))}
         </div>
         <Textarea value={f.observations} onChange={e => setF(p => ({ ...p, observations: e.target.value }))} placeholder="Observații..." />

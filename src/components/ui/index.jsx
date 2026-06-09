@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { X, ArrowLeft } from "lucide-react";
 import { STATUS_STYLES } from "../../utils/constants.js";
 
 export function StatusBadge({ status }) {
@@ -32,15 +33,10 @@ export function StatMini({ label, value, color = "teal" }) {
 }
 
 export function Btn({ children, onClick, variant = "primary", style: extra, disabled }) {
-  const V = {
-    primary:   { background: "#0d9488", color: "#fff", border: "none" },
-    secondary: { background: "#f1f5f9", color: "#334155", border: "none" },
-    ghost:     { background: "transparent", color: "#64748b", border: "none" },
-    danger:    { background: "#fef2f2", color: "#dc2626", border: "none" },
-  };
   return (
     <button onClick={onClick} disabled={disabled}
-      style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 12, fontSize: 13, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer", fontFamily: "inherit", transition: "all .15s", opacity: disabled ? 0.5 : 1, whiteSpace: "nowrap", flexShrink: 0, ...V[variant], ...extra }}>
+      className={`cad-btn cad-btn-${variant}`}
+      style={extra}>
       {children}
     </button>
   );
@@ -50,6 +46,40 @@ const iStyle = (err) => ({ width: "100%", padding: "9px 12px", borderRadius: 10,
 export function Input(props)    { const { error, style: ex, ...r } = props; return <input    style={{ ...iStyle(error), ...ex }} {...r} />; }
 export function Select(props)   { const { error, style: ex, ...r } = props; return <select   style={{ ...iStyle(error), ...ex, appearance: "auto" }} {...r} />; }
 export function Textarea(props) { const { error, style: ex, ...r } = props; return <textarea style={{ ...iStyle(error), minHeight: 72, resize: "vertical", ...ex }} {...r} />; }
+
+// Input dată cu format dd/mm/yyyy, stocat intern ca YYYY-MM-DD
+export function DateInput({ value, onChange }) {
+  const toDisplay = (iso) => {
+    if (!iso) return "";
+    const [y, m, d] = iso.split("-");
+    return `${d}/${m}/${y}`;
+  };
+  const [display, setDisplay] = useState(() => toDisplay(value));
+
+  const handleChange = (e) => {
+    let v = e.target.value.replace(/[^\d/]/g, "");
+    // Auto-inserează /
+    if (v.length === 2 && display.length === 1) v = v + "/";
+    if (v.length === 5 && display.length === 4) v = v + "/";
+    setDisplay(v);
+    // Convertește la ISO dacă e complet
+    const parts = v.split("/");
+    if (parts.length === 3 && parts[0].length === 2 && parts[1].length === 2 && parts[2].length === 4) {
+      const [d, m, y] = parts;
+      onChange(`${y}-${m}-${d}`);
+    }
+  };
+
+  return (
+    <input
+      value={display}
+      onChange={handleChange}
+      placeholder="zz/ll/aaaa"
+      maxLength={10}
+      style={{ ...iStyle(false) }}
+    />
+  );
+}
 
 export function Field({ label, children, error }) {
   return (
@@ -71,7 +101,7 @@ export function Modal({ isOpen, onClose, title, subtitle, children, footer, maxW
             <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 600, fontSize: 17, color: "#1e293b", letterSpacing: "-0.2px" }}>{title}</div>
             {subtitle && <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 3 }}>{subtitle}</div>}
           </div>
-          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", padding: 4, fontSize: 18 }}>✕</button>
+          <button onClick={onClose} className="cad-icon-btn"><X size={18} /></button>
         </div>
         <div style={{ padding: "16px 20px" }}>{children}</div>
         {footer && <div style={{ padding: "0 20px 20px", display: "flex", gap: 10, position: "sticky", bottom: 0, background: "#fff", borderTop: "1px solid #f1f5f9", paddingTop: 12 }}>{footer}</div>}
@@ -96,10 +126,12 @@ export function ConfirmDialog({ isOpen, title, message, onConfirm, onCancel }) {
   );
 }
 
-export function Empty({ icon, title, subtitle, action }) {
+export function Empty({ icon: Icon, title, subtitle, action }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 20px", textAlign: "center" }}>
-      <div style={{ fontSize: 44, marginBottom: 12 }}>{icon}</div>
+      <div style={{ width: 64, height: 64, borderRadius: 20, background: "#f0fdfa", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+        <Icon size={30} color="#0d9488" strokeWidth={1.5} />
+      </div>
       <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 600, fontSize: 17, color: "#334155", marginBottom: 6, letterSpacing: "-0.2px" }}>{title}</div>
       {subtitle && <div style={{ fontSize: 14, color: "#94a3b8", marginBottom: 20, lineHeight: 1.5 }}>{subtitle}</div>}
       {action}
@@ -109,10 +141,8 @@ export function Empty({ icon, title, subtitle, action }) {
 
 export function BackBtn({ onClick }) {
   return (
-    <button onClick={onClick} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 10, border: "none", background: "#f1f5f9", color: "#475569", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", flexShrink: 0, transition: "all .15s" }}
-      onMouseEnter={e => e.currentTarget.style.background = "#e2e8f0"}
-      onMouseLeave={e => e.currentTarget.style.background = "#f1f5f9"}>
-      ← Înapoi
+    <button onClick={onClick} className="cad-back-btn">
+      <ArrowLeft size={15} /> Înapoi
     </button>
   );
 }
