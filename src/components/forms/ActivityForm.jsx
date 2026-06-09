@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Map, Monitor, Pencil, Clock, Plus, X, Zap, Save, Mountain, Car } from "lucide-react";
+import { Map, Monitor, Pencil, Clock, Plus, X, Zap, Save } from "lucide-react";
 import { useApp } from "../../context/AppContext.jsx";
 import { Modal, Field, Input, Select, Textarea, Btn, DateInput } from "../ui/index.jsx";
 import { STATUS_OPTIONS, INTERVENTION_TYPES, EXTRA_ELEMENTS, OFFICE_TYPES, QUICK_OBS } from "../../utils/constants.js";
@@ -51,8 +51,9 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
     onClose();
   };
 
-  const secStyle = { border: "1.5px solid #f1f5f9", borderRadius: 14, overflow: "hidden", marginBottom: 14 };
-  const secHead  = { width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", background: "none", border: "none", cursor: "pointer", fontSize: 13, fontWeight: 700, color: "#334155", fontFamily: "inherit" };
+  const sectionCls = "border border-slate-100 rounded-[14px] overflow-hidden mb-3.5";
+  const sectionHeadCls = "w-full flex items-center justify-between px-3.5 py-3 bg-transparent border-none cursor-pointer text-[13px] font-bold text-slate-700 font-sans hover:bg-slate-50 transition-colors duration-100";
+  const modeBtnCls = (active) => `flex-1 flex items-center justify-center gap-1.5 py-[7px] rounded-[10px] text-xs font-semibold cursor-pointer border-none font-sans transition-all duration-150 ${active ? "bg-slate-800 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Activitate nouă"
@@ -60,7 +61,7 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
       maxWidth={600}
       footer={<><Btn variant="secondary" onClick={onClose}>Anulează</Btn><Btn onClick={submit} style={{ flex: 1, justifyContent: "center" }}><Save size={14} /> Salvează activitatea</Btn></>}>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 4 }}>
+      <div className="grid grid-cols-2 gap-2.5 mb-1">
         <Field label="Data"><DateInput value={f.date} onChange={v => setF(p => ({ ...p, date: v }))} /></Field>
         <Field label="Status sector">
           <Select value={f.sectorStatus} onChange={e => setF(p => ({ ...p, sectorStatus: e.target.value }))}>
@@ -70,10 +71,12 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
       </div>
 
       <Field label="Echipă">
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <div className="flex gap-2 flex-wrap">
           {colleagues.map(c => (
             <button key={c.id} type="button" onClick={() => toggleTeam(c.name)}
-              style={{ padding: "6px 14px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", border: "none", transition: "all .15s", background: f.team.includes(c.name) ? "#0d9488" : "#f1f5f9", color: f.team.includes(c.name) ? "#fff" : "#334155", fontFamily: "inherit" }}>
+              className={`px-3.5 py-1.5 rounded-[10px] text-[13px] font-semibold cursor-pointer border-none transition-all duration-150 font-sans ${
+                f.team.includes(c.name) ? "bg-teal-600 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+              }`}>
               {f.team.includes(c.name) ? "✓ " : ""}{c.name}
             </button>
           ))}
@@ -81,76 +84,88 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
       </Field>
 
       <Field label="Progres sector">
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 10, alignItems: "center" }}>
-          <div><label style={{ fontSize: 10, color: "#94a3b8", display: "block", marginBottom: 3 }}>Anterior (%)</label><Input type="number" min="0" max="100" value={f.progressPrev} onChange={e => setF(p => ({ ...p, progressPrev: e.target.value }))} /></div>
-          <div><label style={{ fontSize: 10, color: "#94a3b8", display: "block", marginBottom: 3 }}>Realizat azi (%)</label><Input type="number" min="0" max="100" value={f.progressToday} onChange={e => setF(p => ({ ...p, progressToday: e.target.value }))} /></div>
-          <div style={{ textAlign: "center", background: "#f0fdfa", borderRadius: 12, padding: "8px 14px", minWidth: 64 }}>
-            <div style={{ fontSize: 9, color: "#0d9488", fontWeight: 700, textTransform: "uppercase" }}>Nou</div>
-            <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 24, color: "#0d9488", letterSpacing: "-0.5px" }}>{progressNew}%</div>
+        <div className="grid gap-2.5 items-center grid-cols-[1fr_1fr_auto] " >
+          <div>
+            <label className="text-[10px] text-slate-400 block mb-0.5">Anterior (%)</label>
+            <Input type="number" min="0" max="100" value={f.progressPrev} onChange={e => setF(p => ({ ...p, progressPrev: e.target.value }))} />
+          </div>
+          <div>
+            <label className="text-[10px] text-slate-400 block mb-0.5">Realizat azi (%)</label>
+            <Input type="number" min="0" max="100" value={f.progressToday} onChange={e => setF(p => ({ ...p, progressToday: e.target.value }))} />
+          </div>
+          <div className="text-center bg-teal-50 rounded-xl px-3.5 py-2 min-w-[64px]">
+            <div className="text-[9px] text-teal-600 font-bold uppercase">Nou</div>
+            <div className="font-display font-bold text-teal-600 leading-none text-[24px] tracking-[-0.5px]">{progressNew}%</div>
           </div>
         </div>
       </Field>
 
       {/* TEREN */}
-      <div style={secStyle}>
-        <button type="button" style={secHead} onClick={() => setF(p => ({ ...p, fieldEnabled: !p.fieldEnabled }))}>
-          <span style={{ display: "flex", alignItems: "center", gap: 8 }}><Map size={15} /> Activitate teren {f.fieldEnabled && <span style={{ fontSize: 9, background: "#ccfbf1", color: "#0d9488", padding: "1px 8px", borderRadius: 20 }}>ACTIV</span>}</span>
-          <span style={{ color: "#94a3b8", fontSize: 10 }}>{f.fieldEnabled ? "▲" : "▼"}</span>
+      <div className={sectionCls}>
+        <button type="button" className={sectionHeadCls} onClick={() => setF(p => ({ ...p, fieldEnabled: !p.fieldEnabled }))}>
+          <span className="flex items-center gap-2">
+            <Map size={15} /> Activitate teren
+            {f.fieldEnabled && <span className="text-[9px] bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full font-bold">ACTIV</span>}
+          </span>
+          <span className="text-slate-400 text-[10px]">{f.fieldEnabled ? "▲" : "▼"}</span>
         </button>
         {f.fieldEnabled && (
-          <div style={{ padding: "0 14px 14px", borderTop: "1px solid #f1f5f9" }}>
-            <Field label="Tip intervenție" style={{ marginTop: 12 }}>
-              <div style={{ display: "flex", gap: 8 }}>
+          <div className="px-3.5 pb-3.5 border-t border-slate-100">
+            <Field label="Tip intervenție">
+              <div className="flex gap-2 mt-3">
                 {INTERVENTION_TYPES.map(t => (
                   <button key={t} type="button" onClick={() => setF(p => ({ ...p, interventionType: t }))}
-                    style={{ flex: 1, padding: "8px", borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "none", background: f.interventionType === t ? "#0d9488" : "#f1f5f9", color: f.interventionType === t ? "#fff" : "#334155", fontFamily: "inherit" }}>
+                    className={`flex-1 py-2 rounded-[10px] text-xs font-semibold cursor-pointer border-none font-sans transition-all duration-150 ${
+                      f.interventionType === t ? "bg-teal-600 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}>
                     {t}
                   </button>
                 ))}
               </div>
             </Field>
             {(sector?.zoneType === "Intravilan" || sector?.zoneType === "Mixt") && (
-              <Field label="Imobile măsurate"><Input type="number" min="0" value={f.intravilanBuildings} onChange={e => setF(p => ({ ...p, intravilanBuildings: e.target.value }))} placeholder="0" /></Field>
+              <Field label="Imobile măsurate">
+                <Input type="number" min="0" value={f.intravilanBuildings} onChange={e => setF(p => ({ ...p, intravilanBuildings: e.target.value }))} placeholder="0" />
+              </Field>
             )}
             {(sector?.zoneType === "Extravilan" || sector?.zoneType === "Mixt") && (
               <Field label="Elemente extravilan">
                 {f.extravilanElements.map((el, i) => (
-                  <div key={i} style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 6 }}>
-                    <span style={{ flex: 1, fontSize: 12, background: "#f8fafc", padding: "7px 10px", borderRadius: 8, color: "#334155" }}>{el.type}</span>
-                    <Input type="number" min="0" step="0.1" value={el.km} onChange={e => { const c = [...f.extravilanElements]; c[i] = { ...c[i], km: e.target.value }; setF(p => ({ ...p, extravilanElements: c })); }} placeholder="km" style={{ width: 80 }} />
+                  <div key={i} className="flex gap-2 items-center mb-1.5">
+                    <span className="flex-1 text-xs bg-slate-50 px-2.5 py-[7px] rounded-lg text-slate-700">{el.type}</span>
+                    <Input type="number" min="0" step="0.1" value={el.km}
+                      onChange={e => { const c = [...f.extravilanElements]; c[i] = { ...c[i], km: e.target.value }; setF(p => ({ ...p, extravilanElements: c })); }}
+                      placeholder="km" style={{ width: 80 }} />
                     <button type="button" onClick={() => removeExtra(i)} className="cad-icon-btn cad-icon-btn-danger"><X size={14} /></button>
                   </div>
                 ))}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 6 }}>
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
                   {EXTRA_ELEMENTS.map(el => (
                     <button key={el} type="button" onClick={() => addExtra(el)}
-                      style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, background: "#f1f5f9", border: "none", borderRadius: 8, padding: "4px 10px", cursor: "pointer", color: "#475569", fontFamily: "inherit", transition: "background .12s" }}
-                      onMouseEnter={e => e.currentTarget.style.background = "#e2e8f0"}
-                      onMouseLeave={e => e.currentTarget.style.background = "#f1f5f9"}>
+                      className="inline-flex items-center gap-1 text-[11px] bg-slate-100 border-none rounded-lg px-2.5 py-1 cursor-pointer text-slate-600 font-sans hover:bg-slate-200 transition-colors duration-100">
                       <Plus size={11} />{el}
                     </button>
                   ))}
                 </div>
               </Field>
             )}
-            <div style={{ borderTop: "1px dashed #f1f5f9", paddingTop: 12, marginTop: 4 }}>
-              <label style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "#64748b", marginBottom: 8, display: "block" }}>Timp teren</label>
-              <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+            <div className="border-t border-dashed border-slate-100 pt-3 mt-1">
+              <label className="cad-label mb-2">Timp teren</label>
+              <div className="flex gap-2 mb-2.5">
                 {["manual", "auto"].map(m => (
-                  <button key={m} type="button" onClick={() => setF(p => ({ ...p, timeMode: m }))}
-                    style={{ flex: 1, padding: "7px", borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "none", background: f.timeMode === m ? "#1e293b" : "#f1f5f9", color: f.timeMode === m ? "#fff" : "#334155", fontFamily: "inherit" }}>
+                  <button key={m} type="button" onClick={() => setF(p => ({ ...p, timeMode: m }))} className={modeBtnCls(f.timeMode === m)}>
                     {m === "manual" ? <><Pencil size={12} /> Manual</> : <><Clock size={12} /> Automat</>}
                   </button>
                 ))}
               </div>
               {f.timeMode === "manual" ? (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <div className="grid grid-cols-2 gap-2.5">
                   <Field label="Ore teren"><Input type="number" min="0" step="0.5" value={f.fieldHours} onChange={e => setF(p => ({ ...p, fieldHours: e.target.value }))} placeholder="0" /></Field>
                   <Field label="Ore deplasare"><Input type="number" min="0" step="0.5" value={f.travelHours} onChange={e => setF(p => ({ ...p, travelHours: e.target.value }))} placeholder="0" /></Field>
                 </div>
               ) : (
                 <div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  <div className="grid grid-cols-2 gap-2.5">
                     <Field label="Plecare (dus)"><Input type="time" value={f.departureTo} onChange={e => setF(p => ({ ...p, departureTo: e.target.value }))} /></Field>
                     <Field label="Sosire destinație"><Input type="time" value={f.arrivalAt} onChange={e => setF(p => ({ ...p, arrivalAt: e.target.value }))} /></Field>
                     <Field label="Început măsurători"><Input type="time" value={f.fieldStart} onChange={e => setF(p => ({ ...p, fieldStart: e.target.value }))} /></Field>
@@ -159,14 +174,14 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
                     <Field label="Sosire acasă"><Input type="time" value={f.arrivalBack} onChange={e => setF(p => ({ ...p, arrivalBack: e.target.value }))} /></Field>
                   </div>
                   {(f.fieldHours > 0 || f.travelHours > 0) && (
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
-                      <div style={{ background: "#f0fdfa", borderRadius: 10, padding: "8px 12px", textAlign: "center" }}>
-                        <div style={{ fontSize: 9, color: "#0d9488", fontWeight: 700 }}>TEREN</div>
-                        <div style={{ fontFamily: "monospace", fontWeight: 700, color: "#0d9488", fontSize: 16 }}>{formatHours(parseFloat(f.fieldHours) || 0)}</div>
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <div className="bg-teal-50 rounded-[10px] px-3 py-2 text-center">
+                        <div className="text-[9px] text-teal-600 font-bold">TEREN</div>
+                        <div className="font-mono font-bold text-teal-600 text-base">{formatHours(parseFloat(f.fieldHours) || 0)}</div>
                       </div>
-                      <div style={{ background: "#eff6ff", borderRadius: 10, padding: "8px 12px", textAlign: "center" }}>
-                        <div style={{ fontSize: 9, color: "#2563eb", fontWeight: 700 }}>DEPLASARE</div>
-                        <div style={{ fontFamily: "monospace", fontWeight: 700, color: "#2563eb", fontSize: 16 }}>{formatHours(parseFloat(f.travelHours) || 0)}</div>
+                      <div className="bg-blue-50 rounded-[10px] px-3 py-2 text-center">
+                        <div className="text-[9px] text-blue-600 font-bold">DEPLASARE</div>
+                        <div className="font-mono font-bold text-blue-600 text-base">{formatHours(parseFloat(f.travelHours) || 0)}</div>
                       </div>
                     </div>
                   )}
@@ -178,18 +193,23 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
       </div>
 
       {/* BIROU */}
-      <div style={secStyle}>
-        <button type="button" style={secHead} onClick={() => setF(p => ({ ...p, officeEnabled: !p.officeEnabled }))}>
-          <span style={{ display: "flex", alignItems: "center", gap: 8 }}><Monitor size={15} /> Activitate birou {f.officeEnabled && <span style={{ fontSize: 9, background: "#dbeafe", color: "#2563eb", padding: "1px 8px", borderRadius: 20 }}>ACTIV</span>}</span>
-          <span style={{ color: "#94a3b8", fontSize: 10 }}>{f.officeEnabled ? "▲" : "▼"}</span>
+      <div className={sectionCls}>
+        <button type="button" className={sectionHeadCls} onClick={() => setF(p => ({ ...p, officeEnabled: !p.officeEnabled }))}>
+          <span className="flex items-center gap-2">
+            <Monitor size={15} /> Activitate birou
+            {f.officeEnabled && <span className="text-[9px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">ACTIV</span>}
+          </span>
+          <span className="text-slate-400 text-[10px]">{f.officeEnabled ? "▲" : "▼"}</span>
         </button>
         {f.officeEnabled && (
-          <div style={{ padding: "0 14px 14px", borderTop: "1px solid #f1f5f9" }}>
-            <Field label="Tip activitate" style={{ marginTop: 12 }}>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          <div className="px-3.5 pb-3.5 border-t border-slate-100">
+            <Field label="Tip activitate">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {OFFICE_TYPES.map(t => (
                   <button key={t} type="button" onClick={() => toggleOffType(t)}
-                    style={{ padding: "6px 12px", borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "none", background: f.officeTypes.includes(t) ? "#2563eb" : "#f1f5f9", color: f.officeTypes.includes(t) ? "#fff" : "#334155", fontFamily: "inherit", transition: "all .15s" }}>
+                    className={`px-3 py-1.5 rounded-[10px] text-xs font-semibold cursor-pointer border-none font-sans transition-all duration-150 ${
+                      f.officeTypes.includes(t) ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}>
                     {t}
                   </button>
                 ))}
@@ -198,19 +218,18 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
             <Field label="Descriere">
               <Textarea value={f.officeDescription} onChange={e => setF(p => ({ ...p, officeDescription: e.target.value }))} placeholder="Detalii..." style={{ minHeight: 56 }} />
             </Field>
-            <div style={{ borderTop: "1px dashed #f1f5f9", paddingTop: 12 }}>
-              <label style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", color: "#64748b", marginBottom: 8, display: "block" }}>Timp birou</label>
-              <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+            <div className="border-t border-dashed border-slate-100 pt-3">
+              <label className="cad-label mb-2">Timp birou</label>
+              <div className="flex gap-2 mb-2.5">
                 {["manual", "auto"].map(m => (
-                  <button key={m} type="button" onClick={() => setF(p => ({ ...p, officetimeMode: m }))}
-                    style={{ flex: 1, padding: "7px", borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "none", background: f.officetimeMode === m ? "#1e293b" : "#f1f5f9", color: f.officetimeMode === m ? "#fff" : "#334155", fontFamily: "inherit" }}>
+                  <button key={m} type="button" onClick={() => setF(p => ({ ...p, officetimeMode: m }))} className={modeBtnCls(f.officetimeMode === m)}>
                     {m === "manual" ? <><Pencil size={12} /> Manual</> : <><Clock size={12} /> Automat</>}
                   </button>
                 ))}
               </div>
               {f.officetimeMode === "manual"
                 ? <Field label="Ore birou"><Input type="number" min="0" step="0.5" value={f.officeHours} onChange={e => setF(p => ({ ...p, officeHours: e.target.value }))} placeholder="0" /></Field>
-                : <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                : <div className="grid grid-cols-2 gap-2.5">
                     <Field label="Ora început"><Input type="time" value={f.officeStart} onChange={e => setF(p => ({ ...p, officeStart: e.target.value }))} /></Field>
                     <Field label="Ora sfârșit"><Input type="time" value={f.officeEnd} onChange={e => setF(p => ({ ...p, officeEnd: e.target.value }))} /></Field>
                   </div>
@@ -221,12 +240,11 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
       </div>
 
       <Field label="Observații">
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
+        <div className="flex flex-wrap gap-1.5 mb-2">
           {QUICK_OBS.map(obs => (
-            <button key={obs} type="button" onClick={() => setF(p => ({ ...p, observations: p.observations ? p.observations + ". " + obs : obs }))}
-              style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, background: "#f1f5f9", border: "none", borderRadius: 20, padding: "4px 10px", cursor: "pointer", color: "#475569", fontFamily: "inherit", transition: "background .12s" }}
-              onMouseEnter={e => e.currentTarget.style.background = "#e2e8f0"}
-              onMouseLeave={e => e.currentTarget.style.background = "#f1f5f9"}>
+            <button key={obs} type="button"
+              onClick={() => setF(p => ({ ...p, observations: p.observations ? p.observations + ". " + obs : obs }))}
+              className="inline-flex items-center gap-1 text-[11px] bg-slate-100 border-none rounded-full px-2.5 py-1 cursor-pointer text-slate-600 font-sans hover:bg-slate-200 transition-colors duration-100">
               <Zap size={10} />{obs}
             </button>
           ))}

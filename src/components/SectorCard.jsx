@@ -20,54 +20,52 @@ export default function SectorCard({ sector, onSelect, onEdit, onActivity }) {
   return (
     <>
       <div onClick={onSelect}
-        style={{ background: "#fff", borderRadius: 16, border: "1px solid #f1f5f9", boxShadow: "0 1px 3px rgba(0,0,0,.04)", cursor: "pointer", transition: "all .2s", position: "relative" }}
-        onMouseEnter={e => { e.currentTarget.style.borderColor = "#99f6e4"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-        onMouseLeave={e => { e.currentTarget.style.borderColor = "#f1f5f9"; e.currentTarget.style.transform = "translateY(0)"; }}>
-        <div style={{ padding: 16 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
-            <div style={{ display: "flex", gap: 10 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 10, background: "#f0fdfa", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        className="bg-white rounded-2xl border border-slate-100 shadow-card cursor-pointer transition-all duration-200 relative hover:border-teal-200 hover:-translate-y-px">
+        <div className="p-4">
+          <div className="flex justify-between items-start mb-2.5">
+            <div className="flex gap-2.5">
+              <div className="w-8 h-8 rounded-[10px] bg-teal-50 flex items-center justify-center shrink-0">
                 <MapPin size={16} color="#0d9488" strokeWidth={2} />
               </div>
               <div>
-                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 600, fontSize: 15, color: "#1e293b", letterSpacing: "-0.1px" }}>Sector {sector.sectorNumber}</div>
-                <div style={{ fontSize: 11, color: "#64748b" }}>{sector.zoneType}</div>
+                <div className="font-display font-semibold text-[15px] text-slate-800 tracking-[-0.1px]">
+                  Sector {sector.sectorNumber}
+                </div>
+                <div className="text-[11px] text-slate-500">{sector.zoneType}</div>
               </div>
             </div>
-            <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+            <div className="flex gap-1 items-center">
               <StatusBadge status={sector.status} />
               <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }} className="cad-icon-btn">
                 <MoreHorizontal size={16} />
               </button>
             </div>
           </div>
+
           <ProgressBar value={sector.progress} showLabel size="sm" />
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10, paddingTop: 10, borderTop: "1px solid #f8fafc" }}>
-            <span style={{ fontSize: 10, color: "#94a3b8" }}>{sector.updatedAt ? fmtDate(sector.updatedAt) : "—"}</span>
+
+          <div className="flex justify-between items-center mt-2.5 pt-2.5 border-t border-slate-50">
+            <span className="text-[10px] text-slate-400">{sector.updatedAt ? fmtDate(sector.updatedAt) : "—"}</span>
             <button onClick={e => { e.stopPropagation(); onActivity(sector); }}
-              style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#0d9488", fontWeight: 700, background: "none", border: "none", cursor: "pointer", borderRadius: 6, padding: "3px 6px", transition: "background .12s" }}
-              onMouseEnter={e => e.currentTarget.style.background = "#f0fdfa"}
-              onMouseLeave={e => e.currentTarget.style.background = "none"}>
+              className="flex items-center gap-1 text-[11px] text-teal-600 font-bold bg-transparent border-none cursor-pointer rounded-md px-1.5 py-0.5 hover:bg-teal-50 transition-colors duration-100">
               <Plus size={13} strokeWidth={2.5} /> Activitate
             </button>
           </div>
         </div>
+
         {menu && (
-          <div ref={menuRef} onClick={e => e.stopPropagation()} style={{ position: "absolute", top: 44, right: 8, background: "#fff", borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,.12)", border: "1px solid #f1f5f9", zIndex: 50, minWidth: 150, overflow: "hidden" }}>
-            <button onClick={() => { setMenu(false); onEdit(sector); }} style={{ display: "flex", gap: 8, alignItems: "center", width: "100%", padding: "9px 12px", background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "#334155", transition: "background .12s" }}
-              onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
-              onMouseLeave={e => e.currentTarget.style.background = "none"}>
+          <div ref={menuRef} onClick={e => e.stopPropagation()} className="absolute top-11 right-2 bg-white rounded-xl shadow-dropdown border border-slate-100 z-[50] min-w-[150px] overflow-hidden">
+            <button onClick={() => { setMenu(false); onEdit(sector); }}
+              className="flex gap-2 items-center w-full px-3 py-2 bg-transparent border-none cursor-pointer text-xs text-slate-700 hover:bg-slate-50 transition-colors duration-100">
               <Pencil size={13} /> Editează
             </button>
-            <button onClick={() => { setMenu(false); onActivity(sector); }} style={{ display: "flex", gap: 8, alignItems: "center", width: "100%", padding: "9px 12px", background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "#334155", transition: "background .12s" }}
-              onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
-              onMouseLeave={e => e.currentTarget.style.background = "none"}>
+            <button onClick={() => { setMenu(false); onActivity(sector); }}
+              className="flex gap-2 items-center w-full px-3 py-2 bg-transparent border-none cursor-pointer text-xs text-slate-700 hover:bg-slate-50 transition-colors duration-100">
               <Plus size={13} /> Activitate nouă
             </button>
-            <hr style={{ border: "none", borderTop: "1px solid #f1f5f9", margin: "4px 0" }} />
-            <button onClick={() => { setMenu(false); setDel(true); }} style={{ display: "flex", gap: 8, alignItems: "center", width: "100%", padding: "9px 12px", background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "#dc2626", transition: "background .12s" }}
-              onMouseEnter={e => e.currentTarget.style.background = "#fef2f2"}
-              onMouseLeave={e => e.currentTarget.style.background = "none"}>
+            <hr className="border-none border-t border-slate-100 my-1" />
+            <button onClick={() => { setMenu(false); setDel(true); }}
+              className="flex gap-2 items-center w-full px-3 py-2 bg-transparent border-none cursor-pointer text-xs text-red-600 hover:bg-red-50 transition-colors duration-100">
               <Trash2 size={13} /> Șterge
             </button>
           </div>

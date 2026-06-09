@@ -28,9 +28,9 @@ function AppContent() {
   };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#f8fafc", fontFamily: "'Inter', sans-serif" }}>
+    <div className="flex min-h-screen bg-slate-50 font-sans">
       <Navigation page={route.page} onNav={nav} />
-      <main className="cad-main" style={{ flex: 1, minWidth: 0, overflowX: "hidden" }}>
+      <main className="cad-main flex-1 min-w-0 overflow-x-hidden">
         {renderPage()}
       </main>
     </div>

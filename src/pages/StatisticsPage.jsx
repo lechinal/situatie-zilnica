@@ -5,11 +5,11 @@ import { formatHours, fmtDateLong } from "../utils/format.js";
 
 function SectionTitle({ icon: Icon, color, bg, children }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-      <div style={{ width: 30, height: 30, borderRadius: 8, background: bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+    <div className="flex items-center gap-2.5 mb-3.5">
+      <div className="w-[30px] h-[30px] rounded-lg flex items-center justify-center shrink-0" style={{ background: bg }}>
         <Icon size={15} color={color} strokeWidth={2} />
       </div>
-      <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 600, fontSize: 16, color: "#334155", margin: 0 }}>{children}</h2>
+      <h2 className="font-display font-semibold text-base text-slate-700 m-0">{children}</h2>
     </div>
   );
 }
@@ -46,37 +46,39 @@ export default function StatisticsPage() {
   const SC = { "Neînceput": "slate", "În lucru": "blue", "Completări": "amber", "La unit": "purple", "La verificat": "amber", "Finalizat": "emerald" };
 
   const periods = [
-    { title: "Astăzi",             Icon: Sun,         color: "#d97706", bg: "#fffbeb", stats: calc(todayActs), noT: false },
-    { title: "Săptămâna curentă",  Icon: CalendarDays, color: "#2563eb", bg: "#eff6ff", stats: calc(weekActs),  noT: true  },
-    { title: "Luna curentă",       Icon: Calendar,    color: "#9333ea", bg: "#faf5ff", stats: calc(monthActs), noT: false },
+    { title: "Astăzi",            Icon: Sun,          color: "#d97706", bg: "#fffbeb", stats: calc(todayActs), noT: false },
+    { title: "Săptămâna curentă", Icon: CalendarDays, color: "#2563eb", bg: "#eff6ff", stats: calc(weekActs),  noT: true  },
+    { title: "Luna curentă",      Icon: Calendar,     color: "#9333ea", bg: "#faf5ff", stats: calc(monthActs), noT: false },
   ];
 
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 24px" }}>
-      <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 30, color: "#1e293b", marginBottom: 6, letterSpacing: "-0.5px" }}>Statistici</h1>
-      <p style={{ fontSize: 13, color: "#94a3b8", marginBottom: 24 }}>{fmtDateLong(now.toISOString())}</p>
+    <div className="max-w-[1200px] mx-auto px-6 py-7">
+      <h1 className="font-display font-bold text-[30px] text-slate-800 mb-1.5 tracking-[-0.5px]">Statistici</h1>
+      <p className="text-[13px] text-slate-400 mb-6">{fmtDateLong(now.toISOString())}</p>
 
       <div className="cad-stats-row">
         {periods.map(({ title, Icon, color, bg, stats, noT }) => (
-          <div key={title} style={{ background: "#fff", borderRadius: 20, border: "1px solid #f1f5f9", padding: 20, marginBottom: 14 }}>
+          <div key={title} className="cad-card p-5 mb-3.5">
             <SectionTitle icon={Icon} color={color} bg={bg}>{title}</SectionTitle>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(100px,1fr))", gap: 10 }}>
+            <div className="grid gap-2.5 grid-cols-[repeat(auto-fit,minmax(100px,1fr))]">
               {items(stats, noT).map(s => <StatMini key={s.l} label={s.l} value={s.v} color={s.c} />)}
             </div>
           </div>
         ))}
       </div>
 
-      <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #f1f5f9", padding: 20, marginBottom: 14 }}>
+      <div className="cad-card p-5 mb-3.5">
         <SectionTitle icon={BarChart2} color="#0d9488" bg="#f0fdfa">Situație sectoare</SectionTitle>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 10 }}>
-          {Object.entries(statusCounts).map(([status, count]) => <StatMini key={status} label={status} value={count} color={SC[status] || "slate"} />)}
+        <div className="grid gap-2.5 grid-cols-[repeat(auto-fit,minmax(110px,1fr))]">
+          {Object.entries(statusCounts).map(([status, count]) => (
+            <StatMini key={status} label={status} value={count} color={SC[status] || "slate"} />
+          ))}
           <StatMini label="Total" value={sectors.length} color="teal" />
         </div>
       </div>
 
       {finances.length > 0 && (
-        <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #f1f5f9", padding: 20 }}>
+        <div className="cad-card p-5">
           <SectionTitle icon={Folder} color="#0d9488" bg="#f0fdfa">Per finanțare</SectionTitle>
           {finances.map(fin => {
             const fUatIds = uats.filter(u => u.financeId === fin.id).map(u => u.id);
@@ -85,11 +87,17 @@ export default function StatisticsPage() {
             const fActs   = activities.filter(a => fSecIds.has(a.sectorId));
             const fStats  = calc(fActs);
             return (
-              <div key={fin.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: "1px solid #f8fafc" }}>
-                <div style={{ fontWeight: 700, color: "#334155", minWidth: 100, fontSize: 13 }}>{fin.name}</div>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {[`${fUatIds.length} UAT-uri`, `${fSecIds.size} sectoare`, fStats.count > 0 && `${fStats.count} activități`, fStats.buildings > 0 && `${fStats.buildings} imobile`, fStats.fieldH > 0 && `${formatHours(fStats.fieldH)} teren`].filter(Boolean).map(t => (
-                    <span key={t} style={{ fontSize: 11, background: "#f8fafc", color: "#475569", padding: "2px 10px", borderRadius: 8 }}>{t}</span>
+              <div key={fin.id} className="flex items-center gap-3 py-2.5 border-b border-slate-50 last:border-0">
+                <div className="font-bold text-slate-700 text-[13px] min-w-[100px]">{fin.name}</div>
+                <div className="flex gap-2 flex-wrap">
+                  {[
+                    `${fUatIds.length} UAT-uri`,
+                    `${fSecIds.size} sectoare`,
+                    fStats.count > 0 && `${fStats.count} activități`,
+                    fStats.buildings > 0 && `${fStats.buildings} imobile`,
+                    fStats.fieldH > 0 && `${formatHours(fStats.fieldH)} teren`,
+                  ].filter(Boolean).map(t => (
+                    <span key={t} className="text-[11px] bg-slate-50 text-slate-500 px-2.5 py-0.5 rounded-lg">{t}</span>
                   ))}
                 </div>
               </div>

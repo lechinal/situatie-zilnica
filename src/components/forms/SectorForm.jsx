@@ -28,7 +28,7 @@ export default function SectorForm({ isOpen, onClose, localityId, editSector }) 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={editSector ? "Editează sectorul" : "Sector nou"}
       footer={<><Btn variant="secondary" onClick={onClose}>Anulează</Btn><Btn onClick={submit}>{editSector ? "Salvează" : "Creează"}</Btn></>}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+      <div className="grid grid-cols-2 gap-2.5">
         <Field label="Nr. Sector *" error={err.sectorNumber}>
           <Input value={form.sectorNumber} onChange={e => setForm(p => ({ ...p, sectorNumber: e.target.value }))} onKeyDown={e => e.key === "Enter" && submit()} placeholder="ex: 53" error={err.sectorNumber} autoFocus />
         </Field>

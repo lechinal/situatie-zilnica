@@ -17,29 +17,29 @@ export default function LocalityPage({ financeId, uatId, localityId, onNav }) {
   const [editS,     setEditS]     = useState(null);
   const [actSector, setActSector] = useState(null);
 
-  if (!locality) return <div style={{ padding: 24 }}><Btn variant="secondary" onClick={() => onNav("uat", { financeId, uatId })}>← Înapoi</Btn></div>;
+  if (!locality) return <div className="p-6"><Btn variant="secondary" onClick={() => onNav("uat", { financeId, uatId })}>← Înapoi</Btn></div>;
 
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 24px" }}>
+    <div className="max-w-[1200px] mx-auto px-6 py-7">
       <Breadcrumb items={[
         { label: "Dashboard", onClick: () => onNav("dashboard") },
         { label: finance?.name, onClick: () => onNav("finance", { financeId }) },
         { label: uat?.name, onClick: () => onNav("uat", { financeId, uatId }) },
         { label: locality.name },
       ]} />
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 22, gap: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+      <div className="flex justify-between items-center mb-5 gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <BackBtn onClick={() => onNav("uat", { financeId, uatId })} />
-          <div style={{ minWidth: 0 }}>
-            <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 26, color: "#1e293b", margin: 0, letterSpacing: "-0.3px" }}>{locality.name}</h1>
-            <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>UAT {uat?.name} · {finance?.name}</p>
+          <div className="min-w-0">
+            <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">{locality.name}</h1>
+            <p className="text-xs text-slate-400 mt-1">UAT {uat?.name} · {finance?.name}</p>
           </div>
         </div>
         <Btn onClick={() => { setEditS(null); setShowForm(true); }}><Plus size={15} /> Sector nou</Btn>
       </div>
 
       {sectors.length > 0 && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 10, marginBottom: 22 }}>
+        <div className="grid gap-2.5 mb-5 grid-cols-[repeat(auto-fit,minmax(120px,1fr))]">
           <StatMini label="Sectoare"      value={sectors.length}                                                           color="teal" />
           <StatMini label="Progres mediu" value={`${avgProgress(sectors)}%`}                                               color="blue" />
           <StatMini label="Active"        value={sectors.filter(s => ["În lucru","Completări"].includes(s.status)).length} color="amber" />
@@ -48,8 +48,9 @@ export default function LocalityPage({ financeId, uatId, localityId, onNav }) {
       )}
 
       {sectors.length === 0
-        ? <Empty icon={MapPin} title="Niciun sector" subtitle="Adaugă primul sector pentru această localitate." action={<Btn onClick={() => setShowForm(true)}><Plus size={15} /> Adaugă sector</Btn>} />
-        : <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 14 }}>
+        ? <Empty icon={MapPin} title="Niciun sector" subtitle="Adaugă primul sector pentru această localitate."
+            action={<Btn onClick={() => setShowForm(true)}><Plus size={15} /> Adaugă sector</Btn>} />
+        : <div className="grid gap-3.5 grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
             {sectors.map(s => (
               <SectorCard key={s.id} sector={s}
                 onSelect={() => onNav("sector", { financeId, uatId, localityId, sectorId: s.id })}

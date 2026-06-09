@@ -3,14 +3,14 @@ import { LayoutDashboard, BarChart2, Settings, Menu, X } from "lucide-react";
 import logoImg from "../assets/images/logo/logo.jpeg";
 
 const NAV_ITEMS = [
-  { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
+  { id: "dashboard",  label: "Dashboard",  Icon: LayoutDashboard },
   { id: "statistics", label: "Statistici", Icon: BarChart2 },
-  { id: "settings", label: "Setări", Icon: Settings },
+  { id: "settings",   label: "Setări",     Icon: Settings },
 ];
 
 function Logo() {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+    <div className="flex items-center gap-2.5">
       <img src={logoImg} alt="Logo" className="cad-logo-img" />
       <div>
         <div className="cad-logo-name">Cadastru Sistematic</div>
@@ -26,36 +26,12 @@ function NavLinks({ activeId, onNav, onClickItem }) {
       {NAV_ITEMS.map(({ id, label, Icon }) => {
         const active = activeId === id;
         return (
-          <button
-            key={id}
-            onClick={() => {
-              onNav(id);
-              onClickItem?.();
-            }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              width: "100%",
-              padding: "10px 12px",
-              borderRadius: 12,
-              border: "none",
-              cursor: "pointer",
-              fontFamily: "'Inter',sans-serif",
-              fontSize: 14,
-              fontWeight: 500,
-              marginBottom: 2,
-              transition: "all .15s",
-              background: active ? "#0d9488" : "transparent",
-              color: active ? "#fff" : "#475569",
-            }}
-            onMouseEnter={(e) => {
-              if (!active) e.currentTarget.style.background = "#f0fdfa";
-            }}
-            onMouseLeave={(e) => {
-              if (!active) e.currentTarget.style.background = "transparent";
-            }}
-          >
+          <button key={id} onClick={() => { onNav(id); onClickItem?.(); }}
+            className={`flex items-center gap-2.5 w-full px-3 py-2.5 rounded-xl border-none cursor-pointer font-sans text-sm font-medium mb-0.5 transition-all duration-150 ${
+              active
+                ? "bg-teal-600 text-white"
+                : "bg-transparent text-slate-600 hover:bg-teal-50 hover:text-teal-700"
+            }`}>
             <Icon size={17} strokeWidth={active ? 2.5 : 2} />
             {label}
           </button>
@@ -66,139 +42,37 @@ function NavLinks({ activeId, onNav, onClickItem }) {
 }
 
 export default function Navigation({ page, onNav }) {
-  const activeId = [
-    "dashboard",
-    "finance",
-    "uat",
-    "locality",
-    "sector",
-  ].includes(page)
-    ? "dashboard"
-    : page;
+  const activeId = ["dashboard","finance","uat","locality","sector"].includes(page) ? "dashboard" : page;
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <>
-      <aside
-        className="cad-sidebar"
-        style={{
-          background: "#fff",
-          borderRight: "1px solid #f1f5f9",
-          height: "100vh",
-          position: "sticky",
-          top: 0,
-          display: "flex",
-          flexDirection: "column",
-          flexShrink: 0,
-        }}
-      >
-        <div
-          style={{
-            padding: "20px 16px 16px",
-            borderBottom: "1px solid #f1f5f9",
-          }}
-        >
-          <Logo />
-        </div>
-        <nav style={{ flex: 1, padding: "16px 12px" }}>
+      <aside className="cad-sidebar">
+        <div className="px-4 pt-5 pb-4 border-b border-slate-100"><Logo /></div>
+        <nav className="flex-1 p-3">
           <NavLinks activeId={activeId} onNav={onNav} />
         </nav>
-        <div
-          style={{
-            padding: "14px 16px",
-            borderTop: "1px solid #f1f5f9",
-            fontSize: 10,
-            color: "#cbd5e1",
-            letterSpacing: "0.05em",
-          }}
-        >
-          v1.0 · 2026
-        </div>
+        <div className="px-4 py-3.5 border-t border-slate-100 text-[10px] text-slate-300 tracking-wider">v2.0 · 2026</div>
       </aside>
 
-      <div
-        className="cad-topbar"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 50,
-          background: "#fff",
-          borderBottom: "1px solid #f1f5f9",
-          padding: "10px 16px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <div className="cad-topbar fixed top-0 left-0 right-0 z-[50] bg-white border-b border-slate-100 px-4 py-2.5 flex items-center justify-between">
         <Logo />
-        <button
-          onClick={() => setMobileOpen(true)}
-          className="cad-icon-btn"
-          style={{ padding: 6 }}
-        >
+        <button onClick={() => setMobileOpen(true)} className="cad-icon-btn p-1.5">
           <Menu size={22} />
         </button>
       </div>
 
       {mobileOpen && (
-        <div
-          onClick={() => setMobileOpen(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.35)",
-            zIndex: 60,
-            display: "flex",
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              width: 240,
-              background: "#fff",
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              boxShadow: "4px 0 24px rgba(0,0,0,.12)",
-              animation: "slideInLeft .22s ease",
-            }}
-          >
-            <div
-              style={{
-                padding: "20px 16px 12px",
-                borderBottom: "1px solid #f1f5f9",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
+        <div onClick={() => setMobileOpen(false)} className="fixed inset-0 bg-black/35 z-[60] flex">
+          <div onClick={e => e.stopPropagation()} className="w-60 bg-white h-full flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.12)] animate-slide-in-left">
+            <div className="px-4 pt-5 pb-3 border-b border-slate-100 flex items-center justify-between">
               <Logo />
-              <button
-                onClick={() => setMobileOpen(false)}
-                className="cad-icon-btn"
-              >
-                <X size={18} />
-              </button>
+              <button onClick={() => setMobileOpen(false)} className="cad-icon-btn"><X size={18} /></button>
             </div>
-            <nav style={{ flex: 1, padding: "12px 10px" }}>
-              <NavLinks
-                activeId={activeId}
-                onNav={onNav}
-                onClickItem={() => setMobileOpen(false)}
-              />
+            <nav className="flex-1 p-2.5">
+              <NavLinks activeId={activeId} onNav={onNav} onClickItem={() => setMobileOpen(false)} />
             </nav>
-            <div
-              style={{
-                padding: "12px 16px",
-                borderTop: "1px solid #f1f5f9",
-                fontSize: 10,
-                color: "#cbd5e1",
-              }}
-            >
-              v1.0 · 2026
-            </div>
+            <div className="px-4 py-3 border-t border-slate-100 text-[10px] text-slate-300">v2.0 · 2026</div>
           </div>
         </div>
       )}

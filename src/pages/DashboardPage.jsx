@@ -17,17 +17,17 @@ export default function DashboardPage({ onNav }) {
   const doneSectors   = allSectors.filter(s => s.status === "Finalizat").length;
 
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28, gap: 12 }}>
-        <div style={{ minWidth: 0 }}>
-          <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 30, color: "#1e293b", margin: 0, letterSpacing: "-0.5px" }}>Dashboard</h1>
-          <p style={{ fontSize: 13, color: "#94a3b8", marginTop: 4 }}>{fmtDateLong(new Date().toISOString())}</p>
+    <div className="max-w-[1200px] mx-auto px-6 py-7">
+      <div className="flex justify-between items-start mb-7 gap-3">
+        <div className="min-w-0">
+          <h1 className="font-display font-bold text-[30px] text-slate-800 m-0 tracking-[-0.5px]">Dashboard</h1>
+          <p className="text-[13px] text-slate-400 mt-1">{fmtDateLong(new Date().toISOString())}</p>
         </div>
         <Btn onClick={() => { setEditF(null); setShowForm(true); }}><Plus size={15} /> Finanțare nouă</Btn>
       </div>
 
       {finances.length > 0 && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 10, marginBottom: 28 }}>
+        <div className="grid gap-2.5 mb-7 grid-cols-[repeat(auto-fit,minmax(130px,1fr))]">
           <StatMini label="Finanțări"      value={finances.length}  color="teal" />
           <StatMini label="Progres global" value={`${globalAvg}%`}  color="blue" />
           <StatMini label="Active"         value={activeSectors}    color="amber" />
@@ -36,8 +36,9 @@ export default function DashboardPage({ onNav }) {
       )}
 
       {finances.length === 0
-        ? <Empty icon={Folder} title="Nicio finanțare" subtitle="Creează prima finanțare pentru a începe." action={<Btn onClick={() => setShowForm(true)}><Plus size={15} /> Creează finanțare</Btn>} />
-        : <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 16 }}>
+        ? <Empty icon={Folder} title="Nicio finanțare" subtitle="Creează prima finanțare pentru a începe."
+            action={<Btn onClick={() => setShowForm(true)}><Plus size={15} /> Creează finanțare</Btn>} />
+        : <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(280px,1fr))]">
             {finances.map(f => (
               <FinanceCard key={f.id} finance={f}
                 uats={uats.filter(u => u.financeId === f.id)}

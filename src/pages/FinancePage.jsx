@@ -14,34 +14,35 @@ export default function FinancePage({ financeId, onNav }) {
   const [showForm, setShowForm] = useState(false);
   const [editU,    setEditU]    = useState(null);
 
-  if (!finance) return <div style={{ padding: 24 }}><Btn variant="secondary" onClick={() => onNav("dashboard")}>← Înapoi</Btn></div>;
+  if (!finance) return <div className="p-6"><Btn variant="secondary" onClick={() => onNav("dashboard")}>← Înapoi</Btn></div>;
 
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 24px" }}>
+    <div className="max-w-[1200px] mx-auto px-6 py-7">
       <Breadcrumb items={[{ label: "Dashboard", onClick: () => onNav("dashboard") }, { label: finance.name }]} />
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 22, gap: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+      <div className="flex justify-between items-center mb-5 gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <BackBtn onClick={() => onNav("dashboard")} />
-          <div style={{ minWidth: 0 }}>
-            <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 26, color: "#1e293b", margin: 0, letterSpacing: "-0.3px" }}>{finance.name}</h1>
-            {finance.description && <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>{finance.description}</p>}
+          <div className="min-w-0">
+            <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">{finance.name}</h1>
+            {finance.description && <p className="text-xs text-slate-400 mt-1">{finance.description}</p>}
           </div>
         </div>
         <Btn onClick={() => { setEditU(null); setShowForm(true); }}><Plus size={15} /> UAT nou</Btn>
       </div>
 
       {uats.length > 0 && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(120px,1fr))", gap: 10, marginBottom: 22 }}>
-          <StatMini label="UAT-uri"       value={uats.length}                                       color="teal" />
-          <StatMini label="Sectoare"      value={sectors.length}                                    color="blue" />
-          <StatMini label="Progres mediu" value={`${avgProgress(sectors)}%`}                        color="purple" />
+        <div className="grid gap-2.5 mb-5 grid-cols-[repeat(auto-fit,minmax(120px,1fr))]">
+          <StatMini label="UAT-uri"       value={uats.length}                                        color="teal" />
+          <StatMini label="Sectoare"      value={sectors.length}                                     color="blue" />
+          <StatMini label="Progres mediu" value={`${avgProgress(sectors)}%`}                         color="purple" />
           <StatMini label="Finalizate"    value={sectors.filter(s => s.status === "Finalizat").length} color="emerald" />
         </div>
       )}
 
       {uats.length === 0
-        ? <Empty icon={Building2} title="Niciun UAT" subtitle="Adaugă primul UAT pentru această finanțare." action={<Btn onClick={() => setShowForm(true)}><Plus size={15} /> Adaugă UAT</Btn>} />
-        : <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 14 }}>
+        ? <Empty icon={Building2} title="Niciun UAT" subtitle="Adaugă primul UAT pentru această finanțare."
+            action={<Btn onClick={() => setShowForm(true)}><Plus size={15} /> Adaugă UAT</Btn>} />
+        : <div className="grid gap-3.5 grid-cols-[repeat(auto-fill,minmax(260px,1fr))]">
             {uats.map(u => {
               const uatLocs    = localities.filter(l => l.uatId === u.id);
               const uatLocIds  = uatLocs.map(l => l.id);

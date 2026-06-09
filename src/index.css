@@ -1,94 +1,128 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #f8fafc; font-family: 'Inter', sans-serif; }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@keyframes slideUp     { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes scaleIn     { from { opacity: 0; transform: scale(.95); }      to { opacity: 1; transform: scale(1); } }
-@keyframes slideInLeft { from { transform: translateX(-100%); }           to { transform: translateX(0); } }
-
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: #14b8a6 !important;
-  box-shadow: 0 0 0 3px rgba(20,184,166,.12);
-}
-button:active { transform: scale(.97); }
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
-
-/* Butoane — hover nativ */
-.cad-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s, box-shadow .15s, transform .1s; white-space: nowrap; flex-shrink: 0; border: none; }
-.cad-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.cad-btn:active:not(:disabled) { transform: scale(.97); }
-.cad-btn-primary   { background: #0d9488; color: #fff; }
-.cad-btn-primary:hover:not(:disabled)   { background: #0f766e; box-shadow: 0 2px 8px rgba(13,148,136,.3); }
-.cad-btn-secondary { background: #f1f5f9; color: #334155; }
-.cad-btn-secondary:hover:not(:disabled) { background: #e2e8f0; }
-.cad-btn-ghost     { background: transparent; color: #64748b; }
-.cad-btn-ghost:hover:not(:disabled)     { background: #f1f5f9; color: #334155; }
-.cad-btn-danger    { background: #fef2f2; color: #dc2626; }
-.cad-btn-danger:hover:not(:disabled)    { background: #fee2e2; }
-
-.cad-back-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 10px; border: none; background: #f1f5f9; color: #475569; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; flex-shrink: 0; transition: background .15s; }
-.cad-back-btn:hover { background: #e2e8f0; color: #1e293b; }
-
-.cad-icon-btn { background: none; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; padding: 5px; color: #94a3b8; transition: background .15s, color .15s; }
-.cad-icon-btn:hover { background: #f1f5f9; color: #475569; }
-.cad-icon-btn-danger:hover { background: #fef2f2 !important; color: #dc2626 !important; }
-
-/* Layout */
-.cad-topbar  { display: none !important; }
-.cad-sidebar { display: flex; width: 210px; }
-.cad-main    { padding-top: 0; }
-
-@media (max-width: 640px) {
-  .cad-topbar  { display: flex !important; }
-  .cad-sidebar { display: none !important; }
-  .cad-main    { padding-top: 60px; }
-}
-@media (min-width: 1024px) {
-  .cad-sidebar { width: 240px; }
-}
-@media (min-width: 1280px) {
-  .cad-sidebar { width: 260px; }
+@layer base {
+  * { box-sizing: border-box; }
+  body { @apply bg-slate-50 font-sans; }
+  input:focus, select:focus, textarea:focus {
+    @apply outline-none ring-[3px] ring-teal-500/10;
+    border-color: #14b8a6 !important;
+  }
+  button:active { transform: scale(.97); }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-sm; }
 }
 
-/* Sector 2-col layout pe desktop */
-@media (min-width: 900px) {
-  .cad-sector-2col {
-    display: grid;
-    grid-template-columns: 360px 1fr;
-    gap: 24px;
-    align-items: start;
+@layer components {
+  /* ─── Butoane ─── */
+  .cad-btn {
+    @apply inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[13px] font-semibold
+           cursor-pointer font-sans transition-all duration-150 whitespace-nowrap shrink-0 border-none;
+  }
+  .cad-btn:disabled { @apply opacity-50 cursor-not-allowed; }
+  .cad-btn:active:not(:disabled) { transform: scale(.97); }
+
+  .cad-btn-primary   { @apply bg-teal-600 text-white; }
+  .cad-btn-primary:hover:not(:disabled)   { @apply bg-teal-700 shadow-btn-teal; }
+  .cad-btn-secondary { @apply bg-slate-100 text-slate-700; }
+  .cad-btn-secondary:hover:not(:disabled) { @apply bg-slate-200; }
+  .cad-btn-ghost     { @apply bg-transparent text-slate-500; }
+  .cad-btn-ghost:hover:not(:disabled)     { @apply bg-slate-100 text-slate-700; }
+  .cad-btn-danger    { @apply bg-red-50 text-red-600; }
+  .cad-btn-danger:hover:not(:disabled)    { @apply bg-red-100; }
+
+  .cad-back-btn {
+    @apply inline-flex items-center gap-1.5 px-3.5 py-[7px] rounded-[10px] border-none
+           bg-slate-100 text-slate-600 text-[13px] font-semibold cursor-pointer font-sans
+           shrink-0 transition-colors duration-150;
+  }
+  .cad-back-btn:hover { @apply bg-slate-200 text-slate-800; }
+
+  .cad-icon-btn {
+    @apply bg-transparent border-none cursor-pointer inline-flex items-center justify-center
+           rounded-lg p-[5px] text-slate-400 transition-all duration-150;
+  }
+  .cad-icon-btn:hover { @apply bg-slate-100 text-slate-600; }
+  .cad-icon-btn-danger:hover { @apply bg-red-50 text-red-600 !important; }
+
+  /* ─── Input ─── */
+  .cad-input {
+    @apply w-full px-3 py-2.5 rounded-[10px] border border-slate-200 text-[13px] text-slate-800
+           bg-white outline-none font-[inherit] box-border transition-[border] duration-150;
+  }
+  .cad-input-error { @apply border-red-300; }
+
+  /* ─── Card ─── */
+  .cad-card { @apply bg-white rounded-[20px] border border-slate-100 shadow-card; }
+
+  /* ─── Badge status ─── */
+  .cad-badge { @apply inline-flex items-center px-2.5 py-0.5 rounded-lg text-[11px] font-bold; }
+
+  /* ─── Field label ─── */
+  .cad-label {
+    @apply block text-[11px] font-semibold uppercase tracking-[0.05em]
+           text-slate-500 mb-1.5 font-sans;
   }
 }
 
-/* Logo responsive */
-.cad-logo-img  { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
-.cad-logo-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #1e293b; letter-spacing: -0.2px; line-height: 1.2; font-size: 13px; }
-.cad-logo-sub  { font-family: 'Inter', sans-serif; color: #94a3b8; margin-top: 1px; font-size: 10px; }
-@media (min-width: 768px) {
-  .cad-logo-img  { width: 40px; height: 40px; border-radius: 10px; }
-  .cad-logo-name { font-size: 14px; }
-  .cad-logo-sub  { font-size: 11px; }
-}
-@media (min-width: 1024px) {
-  .cad-logo-img  { width: 46px; height: 46px; border-radius: 12px; }
-  .cad-logo-name { font-size: 15px; }
-  .cad-logo-sub  { font-size: 11px; }
-}
-@media (min-width: 1280px) {
-  .cad-logo-img  { width: 50px; height: 50px; }
-  .cad-logo-name { font-size: 16px; }
-}
+@layer utilities {
+  /* ─── Layout sidebar / topbar / main ─── */
+  .cad-topbar  { display: none !important; }
+  .cad-sidebar { @apply flex bg-white border-r border-slate-100 h-screen sticky top-0 shrink-0 flex-col; width: 210px; }
+  .cad-main    { padding-top: 0; }
 
-/* Stats 3 coloane pe desktop */
-@media (min-width: 1024px) {
-  .cad-stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-bottom: 14px;
+  @media (max-width: 640px) {
+    .cad-topbar  { display: flex !important; }
+    .cad-sidebar { display: none !important; }
+    .cad-main    { padding-top: 60px; }
   }
-  .cad-stats-row > div { margin-bottom: 0 !important; }
+  @media (min-width: 1024px) { .cad-sidebar { width: 240px; } }
+  @media (min-width: 1280px) { .cad-sidebar { width: 260px; } }
+
+  /* ─── Logo responsive ─── */
+  .cad-logo-img  { @apply rounded-lg object-cover shrink-0; width: 34px; height: 34px; }
+  .cad-logo-name { @apply font-display font-bold text-slate-800 leading-tight; font-size: 13px; letter-spacing: -0.2px; }
+  .cad-logo-sub  { @apply font-sans text-slate-400; font-size: 10px; margin-top: 1px; }
+  @media (min-width: 768px) {
+    .cad-logo-img  { width: 40px; height: 40px; @apply rounded-[10px]; }
+    .cad-logo-name { font-size: 14px; }
+    .cad-logo-sub  { font-size: 11px; }
+  }
+  @media (min-width: 1024px) {
+    .cad-logo-img  { width: 46px; height: 46px; @apply rounded-xl; }
+    .cad-logo-name { font-size: 15px; }
+  }
+  @media (min-width: 1280px) {
+    .cad-logo-img  { width: 50px; height: 50px; }
+    .cad-logo-name { font-size: 16px; }
+  }
+
+  /* ─── Sector 2-col desktop ─── */
+  @media (min-width: 900px) {
+    .cad-sector-2col {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+  }
+
+  /* ─── Stats 3-col desktop ─── */
+  @media (min-width: 1024px) {
+    .cad-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .cad-stats-row > div { margin-bottom: 0 !important; }
+  }
+
+  /* ─── Animații globale ─── */
+  @keyframes slideUp     { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes slideInLeft { from { transform:translateX(-100%); }           to { transform:translateX(0); } }
+  @keyframes scaleIn     { from { opacity:0; transform:scale(.95); }       to { opacity:1; transform:scale(1); } }
 }
