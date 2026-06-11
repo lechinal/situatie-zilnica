@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import SignatureAEA from "../components/SignatureAEA.jsx";
 import {
   Users,
   HardDrive,
@@ -183,10 +184,13 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="text-center mt-6 text-[11px] text-slate-300">
+      <div className="text-center mt-6 text-[11px] text-slate-300 mb-2">
         Cadastru Sistematic · Situație Zilnică v1.0
         <br />
         Datele sunt salvate local în browser.
+      </div>
+      <div className="max-w-xs mx-auto">
+        <SignatureAEA />
       </div>
 
       <ConfirmDialog

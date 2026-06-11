@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { LayoutDashboard, BarChart2, Settings, Menu, X } from "lucide-react";
 import logoImg from "../assets/images/logo/logo.jpeg";
+import SignatureAEA from "./SignatureAEA.jsx";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
@@ -10,7 +11,10 @@ const NAV_ITEMS = [
 
 function Logo({ onNav }) {
   return (
-    <div onClick={() => onNav?.("dashboard")} className="flex items-center gap-2.5 cursor-pointer">
+    <div
+      onClick={() => onNav?.("dashboard")}
+      className="flex items-center gap-2.5 cursor-pointer"
+    >
       <img src={logoImg} alt="Logo" className="cad-logo-img" />
       <div>
         <div className="cad-logo-name">Cadastru Sistematic</div>
@@ -68,48 +72,35 @@ export default function Navigation({ page, onNav }) {
         <nav className="flex-1 p-3">
           <NavLinks activeId={activeId} onNav={onNav} />
         </nav>
-        <div className="px-4 py-3.5 border-t border-slate-100 text-[10px] text-slate-300 tracking-wider">
-          v1.0 · 2026
+        <div className="px-4 py-3.5 border-t border-slate-100">
+          <SignatureAEA />
         </div>
       </aside>
 
       <div className="cad-topbar fixed top-0 left-0 right-0 z-[50] bg-white border-b border-slate-100 px-4 py-2.5 flex items-center justify-between">
         <Logo onNav={onNav} />
-        <button
-          onClick={() => setMobileOpen(true)}
-          className="cad-icon-btn p-1.5"
-        >
+        <button onClick={() => setMobileOpen(true)} className="cad-icon-btn p-1.5">
           <Menu size={22} />
         </button>
       </div>
 
       {mobileOpen && (
-        <div
-          onClick={() => setMobileOpen(false)}
-          className="fixed inset-0 bg-black/35 z-[60] flex"
-        >
+        <div onClick={() => setMobileOpen(false)} className="fixed inset-0 bg-black/35 z-[60] flex">
           <div
             onClick={(e) => e.stopPropagation()}
             className="w-60 bg-white h-full flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.12)] animate-slide-in-left"
           >
             <div className="px-4 pt-5 pb-3 border-b border-slate-100 flex items-center justify-between">
               <Logo onNav={onNav} />
-              <button
-                onClick={() => setMobileOpen(false)}
-                className="cad-icon-btn"
-              >
+              <button onClick={() => setMobileOpen(false)} className="cad-icon-btn">
                 <X size={18} />
               </button>
             </div>
             <nav className="flex-1 p-2.5">
-              <NavLinks
-                activeId={activeId}
-                onNav={onNav}
-                onClickItem={() => setMobileOpen(false)}
-              />
+              <NavLinks activeId={activeId} onNav={onNav} onClickItem={() => setMobileOpen(false)} />
             </nav>
-            <div className="px-4 py-3 border-t border-slate-100 text-[10px] text-slate-300">
-              v1.0 · 2026
+            <div className="px-4 py-3 border-t border-slate-100">
+              <SignatureAEA />
             </div>
           </div>
         </div>

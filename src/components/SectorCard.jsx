@@ -36,9 +36,6 @@ export default function SectorCard({ sector, onSelect, onEdit, onActivity }) {
             </div>
             <div className="flex items-center gap-0.5">
               <StatusBadge status={sector.status} />
-              <button onClick={e => { e.stopPropagation(); onEdit(sector); }} className="cad-icon-btn" title="Editează">
-                <Pencil size={14} />
-              </button>
               <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }} className="cad-icon-btn">
                 <MoreHorizontal size={16} />
               </button>
@@ -57,14 +54,19 @@ export default function SectorCard({ sector, onSelect, onEdit, onActivity }) {
         </div>
 
         {menu && (
-          <div ref={menuRef} onClick={e => e.stopPropagation()} className="absolute top-11 right-2 bg-white rounded-xl shadow-dropdown border border-slate-100 z-[50] min-w-[150px] overflow-hidden">
+          <div ref={menuRef} onClick={e => e.stopPropagation()} className="absolute top-11 right-2 bg-white rounded-xl shadow-dropdown border border-slate-100 z-[50] min-w-[155px] overflow-hidden">
             <button onClick={() => { setMenu(false); onActivity(sector); }}
-              className="flex gap-2 items-center w-full px-3 py-2 bg-transparent border-none cursor-pointer text-xs text-slate-700 hover:bg-slate-50 transition-colors duration-100">
+              className="flex gap-2 items-center w-full px-3 py-2 bg-transparent border-none cursor-pointer text-xs font-medium text-teal-600 hover:bg-teal-50 transition-colors duration-100">
               <Plus size={13} /> Activitate nouă
             </button>
-            <hr className="border-none border-t border-slate-100 my-1" />
+            <hr className="border-none border-t border-slate-100 my-0.5" />
+            <button onClick={() => { setMenu(false); onEdit(sector); }}
+              className="flex gap-2 items-center w-full px-3 py-2 bg-transparent border-none cursor-pointer text-xs font-medium text-amber-600 hover:bg-amber-50 transition-colors duration-100">
+              <Pencil size={13} /> Editează
+            </button>
+            <hr className="border-none border-t border-slate-100 my-0.5" />
             <button onClick={() => { setMenu(false); setDel(true); }}
-              className="flex gap-2 items-center w-full px-3 py-2 bg-transparent border-none cursor-pointer text-xs text-red-600 hover:bg-red-50 transition-colors duration-100">
+              className="flex gap-2 items-center w-full px-3 py-2 bg-transparent border-none cursor-pointer text-xs font-medium text-red-600 hover:bg-red-50 transition-colors duration-100">
               <Trash2 size={13} /> Șterge
             </button>
           </div>
