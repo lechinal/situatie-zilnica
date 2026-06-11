@@ -158,7 +158,8 @@ export function Empty({ icon: Icon, title, subtitle, action }) {
 
 export function BackBtn({ onClick }) {
   return (
-    <button onClick={onClick} className="cad-back-btn">
+    <button onClick={onClick}
+      className={`${BTN_BASE} ${BTN_VARIANTS.secondary}`}>
       <ArrowLeft size={15} /><span className="hidden sm:inline">Înapoi</span>
     </button>
   );

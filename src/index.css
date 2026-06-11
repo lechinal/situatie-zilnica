@@ -34,14 +34,7 @@
   .cad-btn-danger    { @apply bg-red-50 text-red-600; }
   .cad-btn-danger:hover:not(:disabled)    { @apply bg-red-100; }
 
-  .cad-back-btn {
-    @apply inline-flex items-center gap-1.5 px-3.5 py-[7px] rounded-[10px] border-none
-           bg-slate-100 text-slate-600 text-[13px] font-semibold cursor-pointer font-sans
-           shrink-0 transition-colors duration-150;
-  }
-  .cad-back-btn:hover { @apply bg-slate-200 text-slate-800; }
-
-  .cad-icon-btn {
+.cad-icon-btn {
     @apply bg-transparent border-none cursor-pointer inline-flex items-center justify-center
            rounded-lg p-[5px] text-slate-400 transition-all duration-150;
   }

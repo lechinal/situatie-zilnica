@@ -27,17 +27,23 @@ export default function LocalityPage({ financeId, uatId, localityId, onNav }) {
         { label: uat?.name, onClick: () => onNav("uat", { financeId, uatId }) },
         { label: locality.name },
       ]} />
-      <div className="flex justify-between items-center mb-5 gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <BackBtn onClick={() => onNav("uat", { financeId, uatId })} />
-          <div className="min-w-0">
-            <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">{locality.name}</h1>
-            <p className="text-xs text-slate-400 mt-1">UAT {uat?.name} · {finance?.name}</p>
+      <div className="mb-5">
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <BackBtn onClick={() => onNav("uat", { financeId, uatId })} />
+            <div className="hidden sm:block min-w-0">
+              <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">{locality.name}</h1>
+              <p className="text-xs text-slate-400 mt-1">UAT {uat?.name} · {finance?.name}</p>
+            </div>
           </div>
+          <Btn onClick={() => { setEditS(null); setShowForm(true); }}>
+            <Plus size={15} /><span className="hidden sm:inline">Sector nou</span>
+          </Btn>
         </div>
-        <Btn onClick={() => { setEditS(null); setShowForm(true); }}>
-          <Plus size={15} /><span className="hidden sm:inline">Sector nou</span>
-        </Btn>
+        <div className="sm:hidden mt-3">
+          <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">{locality.name}</h1>
+          <p className="text-xs text-slate-400 mt-1 leading-relaxed">UAT {uat?.name} · {finance?.name}</p>
+        </div>
       </div>
 
       {sectors.length > 0 && (

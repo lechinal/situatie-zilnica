@@ -42,23 +42,31 @@ export default function SectorPage({ financeId, uatId, localityId, sectorId, onN
         { label: `Sector ${sector.sectorNumber}` },
       ]} />
 
-      <div className="flex justify-between items-center mb-6 gap-3">
-        <div className="flex items-center gap-3">
-          <BackBtn onClick={() => onNav("locality", { financeId, uatId, localityId })} />
-          <div>
-            <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">
-              Sector {sector.sectorNumber}
-            </h1>
-            <p className="text-xs text-slate-400 mt-1">{locality?.name} · UAT {uat?.name} · {finance?.name}</p>
+      <div className="mb-6">
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <BackBtn onClick={() => onNav("locality", { financeId, uatId, localityId })} />
+            <div className="hidden sm:block min-w-0">
+              <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">
+                Sector {sector.sectorNumber}
+              </h1>
+              <p className="text-xs text-slate-400 mt-1">{locality?.name} · UAT {uat?.name} · {finance?.name}</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Btn variant="secondary" onClick={() => setShowEdit(true)}>
+              <Pencil size={15} /><span className="hidden sm:inline">Editează</span>
+            </Btn>
+            <Btn onClick={() => setShowAct(true)}>
+              <Plus size={15} /><span className="hidden sm:inline">Activitate</span>
+            </Btn>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Btn variant="ghost" onClick={() => setShowEdit(true)}>
-            <Pencil size={15} /><span className="hidden sm:inline">Editează</span>
-          </Btn>
-          <Btn onClick={() => setShowAct(true)}>
-            <Plus size={15} /><span className="hidden sm:inline">Activitate</span>
-          </Btn>
+        <div className="sm:hidden mt-3">
+          <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">
+            Sector {sector.sectorNumber}
+          </h1>
+          <p className="text-xs text-slate-400 mt-1 leading-relaxed">{locality?.name} · UAT {uat?.name} · {finance?.name}</p>
         </div>
       </div>
 

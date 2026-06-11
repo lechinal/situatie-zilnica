@@ -19,17 +19,23 @@ export default function FinancePage({ financeId, onNav }) {
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-7">
       <Breadcrumb items={[{ label: "Dashboard", onClick: () => onNav("dashboard") }, { label: finance.name }]} />
-      <div className="flex justify-between items-center mb-5 gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <BackBtn onClick={() => onNav("dashboard")} />
-          <div className="min-w-0">
-            <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">{finance.name}</h1>
-            {finance.description && <p className="text-xs text-slate-400 mt-1">{finance.description}</p>}
+      <div className="mb-5">
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <BackBtn onClick={() => onNav("dashboard")} />
+            <div className="hidden sm:block min-w-0">
+              <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">{finance.name}</h1>
+              {finance.description && <p className="text-xs text-slate-400 mt-1">{finance.description}</p>}
+            </div>
           </div>
+          <Btn onClick={() => { setEditU(null); setShowForm(true); }}>
+            <Plus size={15} /><span className="hidden sm:inline">UAT nou</span>
+          </Btn>
         </div>
-        <Btn onClick={() => { setEditU(null); setShowForm(true); }}>
-          <Plus size={15} /><span className="hidden sm:inline">UAT nou</span>
-        </Btn>
+        <div className="sm:hidden mt-3">
+          <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">{finance.name}</h1>
+          {finance.description && <p className="text-xs text-slate-400 mt-1 leading-relaxed">{finance.description}</p>}
+        </div>
       </div>
 
       {uats.length > 0 && (

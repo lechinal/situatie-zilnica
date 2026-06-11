@@ -25,17 +25,23 @@ export default function UatPage({ financeId, uatId, onNav }) {
         { label: finance?.name, onClick: () => onNav("finance", { financeId }) },
         { label: uat.name },
       ]} />
-      <div className="flex justify-between items-center mb-5 gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <BackBtn onClick={() => onNav("finance", { financeId })} />
-          <div className="min-w-0">
-            <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">UAT {uat.name}</h1>
-            <p className="text-xs text-slate-400 mt-1">{finance?.name}</p>
+      <div className="mb-5">
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <BackBtn onClick={() => onNav("finance", { financeId })} />
+            <div className="hidden sm:block min-w-0">
+              <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">UAT {uat.name}</h1>
+              <p className="text-xs text-slate-400 mt-1">{finance?.name}</p>
+            </div>
           </div>
+          <Btn onClick={() => { setEditL(null); setShowForm(true); }}>
+            <Plus size={15} /><span className="hidden sm:inline">Localitate nouă</span>
+          </Btn>
         </div>
-        <Btn onClick={() => { setEditL(null); setShowForm(true); }}>
-          <Plus size={15} /><span className="hidden sm:inline">Localitate nouă</span>
-        </Btn>
+        <div className="sm:hidden mt-3">
+          <h1 className="font-display font-bold text-[26px] text-slate-800 m-0 tracking-[-0.3px]">UAT {uat.name}</h1>
+          <p className="text-xs text-slate-400 mt-1 leading-relaxed">{finance?.name}</p>
+        </div>
       </div>
 
       {localities.length > 0 && (
