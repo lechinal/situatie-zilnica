@@ -159,7 +159,7 @@ export function Empty({ icon: Icon, title, subtitle, action }) {
 export function BackBtn({ onClick }) {
   return (
     <button onClick={onClick} className="cad-back-btn">
-      <ArrowLeft size={15} /> Înapoi
+      <ArrowLeft size={15} /><span className="hidden sm:inline">Înapoi</span>
     </button>
   );
 }

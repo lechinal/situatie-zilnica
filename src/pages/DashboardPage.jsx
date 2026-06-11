@@ -23,7 +23,9 @@ export default function DashboardPage({ onNav }) {
           <h1 className="font-display font-bold text-[30px] text-slate-800 m-0 tracking-[-0.5px]">Dashboard</h1>
           <p className="text-[13px] text-slate-400 mt-1">{fmtDateLong(new Date().toISOString())}</p>
         </div>
-        <Btn onClick={() => { setEditF(null); setShowForm(true); }}><Plus size={15} /> Finanțare nouă</Btn>
+        <Btn onClick={() => { setEditF(null); setShowForm(true); }}>
+          <Plus size={15} /><span className="hidden sm:inline">Finanțare nouă</span>
+        </Btn>
       </div>
 
       {finances.length > 0 && (

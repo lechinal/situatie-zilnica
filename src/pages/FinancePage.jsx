@@ -27,7 +27,9 @@ export default function FinancePage({ financeId, onNav }) {
             {finance.description && <p className="text-xs text-slate-400 mt-1">{finance.description}</p>}
           </div>
         </div>
-        <Btn onClick={() => { setEditU(null); setShowForm(true); }}><Plus size={15} /> UAT nou</Btn>
+        <Btn onClick={() => { setEditU(null); setShowForm(true); }}>
+          <Plus size={15} /><span className="hidden sm:inline">UAT nou</span>
+        </Btn>
       </div>
 
       {uats.length > 0 && (

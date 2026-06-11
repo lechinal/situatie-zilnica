@@ -5,8 +5,8 @@ import { Modal, Field, Input, Select, Textarea, Btn, DateInput } from "../ui/ind
 import { STATUS_OPTIONS, INTERVENTION_TYPES, EXTRA_ELEMENTS, OFFICE_TYPES, QUICK_OBS } from "../../utils/constants.js";
 import { calcNewProgress, calcBetween, formatHours } from "../../utils/format.js";
 
-export default function ActivityForm({ isOpen, onClose, sector, locality, uat, finance }) {
-  const { addActivity, colleagues } = useApp();
+export default function ActivityForm({ isOpen, onClose, sector, locality, uat, finance, editActivity }) {
+  const { addActivity, updateActivity, colleagues } = useApp();
   const today = new Date().toISOString().split("T")[0];
   const [f, setF] = useState({
     date: today, team: [], observations: "", progressPrev: sector?.progress || 0, progressToday: 0, sectorStatus: sector?.status || "În lucru",
@@ -16,8 +16,35 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
   });
 
   useEffect(() => {
-    setF(p => ({ ...p, progressPrev: sector?.progress || 0, sectorStatus: sector?.status || "În lucru" }));
-  }, [sector, isOpen]);
+    if (!isOpen) return;
+    if (editActivity) {
+      // Pre-completăm formularul cu datele activității existente
+      setF({
+        date:              editActivity.date || today,
+        team:              editActivity.team || [],
+        observations:      editActivity.observations || "",
+        progressPrev:      editActivity.progressPrev ?? 0,
+        progressToday:     editActivity.progressToday ?? 0,
+        sectorStatus:      editActivity.sectorStatus || sector?.status || "În lucru",
+        fieldEnabled:      editActivity.fieldActivity?.enabled || false,
+        interventionType:  editActivity.fieldActivity?.interventionType || "Măsurători inițiale",
+        intravilanBuildings: editActivity.fieldActivity?.intravilanBuildings || "",
+        extravilanElements: editActivity.fieldActivity?.extravilanElements || [],
+        timeMode:          "manual",
+        fieldHours:        editActivity.fieldHours || "",
+        travelHours:       editActivity.travelHours || "",
+        departureTo: "", arrivalAt: "", fieldStart: "", fieldEnd: "", departureFrom: "", arrivalBack: "",
+        officeEnabled:     editActivity.officeActivity?.enabled || false,
+        officeTypes:       editActivity.officeActivity?.types || [],
+        officeDescription: editActivity.officeActivity?.description || "",
+        officetimeMode:    "manual",
+        officeHours:       editActivity.officeHours || "",
+        officeStart: "", officeEnd: "",
+      });
+    } else {
+      setF(p => ({ ...p, progressPrev: sector?.progress || 0, sectorStatus: sector?.status || "În lucru" }));
+    }
+  }, [editActivity, sector, isOpen]);
 
   useEffect(() => {
     if (f.timeMode === "auto") {
@@ -40,14 +67,20 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
   const addExtra      = (type) => setF(p => ({ ...p, extravilanElements: [...p.extravilanElements, { type, km: "" }] }));
   const removeExtra   = (i) => setF(p => ({ ...p, extravilanElements: p.extravilanElements.filter((_, j) => j !== i) }));
 
+  const payload = {
+    sectorId: sector.id, date: f.date, team: f.team, observations: f.observations,
+    progressPrev: parseFloat(f.progressPrev) || 0, progressToday: parseFloat(f.progressToday) || 0, progressNew,
+    sectorStatus: f.sectorStatus, fieldHours: parseFloat(f.fieldHours) || 0, travelHours: parseFloat(f.travelHours) || 0, officeHours: parseFloat(f.officeHours) || 0,
+    fieldActivity:  f.fieldEnabled  ? { enabled: true, interventionType: f.interventionType, intravilanBuildings: parseInt(f.intravilanBuildings) || 0, extravilanElements: f.extravilanElements } : { enabled: false },
+    officeActivity: f.officeEnabled ? { enabled: true, types: f.officeTypes, description: f.officeDescription } : { enabled: false },
+  };
+
   const submit = () => {
-    addActivity({
-      sectorId: sector.id, date: f.date, team: f.team, observations: f.observations,
-      progressPrev: parseFloat(f.progressPrev) || 0, progressToday: parseFloat(f.progressToday) || 0, progressNew,
-      sectorStatus: f.sectorStatus, fieldHours: parseFloat(f.fieldHours) || 0, travelHours: parseFloat(f.travelHours) || 0, officeHours: parseFloat(f.officeHours) || 0,
-      fieldActivity:  f.fieldEnabled  ? { enabled: true, interventionType: f.interventionType, intravilanBuildings: parseInt(f.intravilanBuildings) || 0, extravilanElements: f.extravilanElements } : { enabled: false },
-      officeActivity: f.officeEnabled ? { enabled: true, types: f.officeTypes, description: f.officeDescription } : { enabled: false },
-    });
+    if (editActivity) {
+      updateActivity(editActivity.id, payload);
+    } else {
+      addActivity(payload);
+    }
     onClose();
   };
 
@@ -56,10 +89,11 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
   const modeBtnCls = (active) => `flex-1 flex items-center justify-center gap-1.5 py-[7px] rounded-[10px] text-xs font-semibold cursor-pointer border-none font-sans transition-all duration-150 ${active ? "bg-slate-800 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Activitate nouă"
+    <Modal isOpen={isOpen} onClose={onClose}
+      title={editActivity ? "Editează activitatea" : "Activitate nouă"}
       subtitle={`${finance?.name} · ${uat?.name} · ${locality?.name} · Sector ${sector?.sectorNumber}`}
       maxWidth={600}
-      footer={<><Btn variant="secondary" onClick={onClose}>Anulează</Btn><Btn onClick={submit} style={{ flex: 1, justifyContent: "center" }}><Save size={14} /> Salvează activitatea</Btn></>}>
+      footer={<><Btn variant="secondary" onClick={onClose}>Anulează</Btn><Btn onClick={submit} style={{ flex: 1, justifyContent: "center" }}><Save size={14} /> {editActivity ? "Salvează modificările" : "Salvează activitatea"}</Btn></>}>
 
       <div className="grid grid-cols-2 gap-2.5 mb-1">
         <Field label="Data"><DateInput value={f.date} onChange={v => setF(p => ({ ...p, date: v }))} /></Field>

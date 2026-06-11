@@ -66,6 +66,10 @@ export function AppProvider({ children }) {
     if (d.progressNew !== undefined) updateSector(d.sectorId, { progress: d.progressNew, ...(d.sectorStatus ? { status: d.sectorStatus } : {}) });
     return a;
   };
+  const updateActivity = (id, d) => {
+    setActivities(p => p.map(a => a.id === id ? { ...a, ...d } : a));
+    if (d.progressNew !== undefined) updateSector(d.sectorId, { progress: d.progressNew, ...(d.sectorStatus ? { status: d.sectorStatus } : {}) });
+  };
   const deleteActivity = (id) => setActivities(p => p.filter(a => a.id !== id));
 
   // ── Colegi ──
@@ -123,7 +127,7 @@ export function AppProvider({ children }) {
       addUat, updateUat, deleteUat,
       addLocality, updateLocality, deleteLocality,
       addSector, updateSector, deleteSector,
-      addActivity, deleteActivity,
+      addActivity, updateActivity, deleteActivity,
       addColleague, deleteColleague,
       exportData, importData,
       getFinanceById, getUatById, getLocalityById, getSectorById,

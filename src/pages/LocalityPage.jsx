@@ -35,7 +35,9 @@ export default function LocalityPage({ financeId, uatId, localityId, onNav }) {
             <p className="text-xs text-slate-400 mt-1">UAT {uat?.name} · {finance?.name}</p>
           </div>
         </div>
-        <Btn onClick={() => { setEditS(null); setShowForm(true); }}><Plus size={15} /> Sector nou</Btn>
+        <Btn onClick={() => { setEditS(null); setShowForm(true); }}>
+          <Plus size={15} /><span className="hidden sm:inline">Sector nou</span>
+        </Btn>
       </div>
 
       {sectors.length > 0 && (

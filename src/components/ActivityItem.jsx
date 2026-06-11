@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { Map, Monitor, Mountain, Car, Clock, MessageCircle, Check, Trash2 } from "lucide-react";
+import { Map, Monitor, Mountain, Car, Clock, MessageCircle, Check, Trash2, Pencil } from "lucide-react";
 import { useApp } from "../context/AppContext.jsx";
 import { ConfirmDialog } from "./ui/index.jsx";
+import ActivityForm from "./forms/ActivityForm.jsx";
 import { fmtDate, formatHours } from "../utils/format.js";
 import { genReport } from "../utils/report.js";
 
 export default function ActivityItem({ activity, sector, locality, uat, finance }) {
   const { deleteActivity } = useApp();
-  const [copied, setCopied] = useState(false);
-  const [del,    setDel]    = useState(false);
+  const [copied,   setCopied]   = useState(false);
+  const [del,      setDel]      = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const copy = async () => {
     try {
@@ -84,13 +86,31 @@ export default function ActivityItem({ activity, sector, locality, uat, finance 
             }`}>
             {copied ? <><Check size={12} /> Copiat!</> : <><MessageCircle size={12} /> WhatsApp</>}
           </button>
-          <button onClick={() => setDel(true)} className="cad-icon-btn cad-icon-btn-danger ml-auto">
-            <Trash2 size={15} />
-          </button>
+          <div className="ml-auto flex gap-1">
+            <button onClick={() => setShowEdit(true)} className="cad-icon-btn" title="Editează activitatea">
+              <Pencil size={14} />
+            </button>
+            <button onClick={() => setDel(true)} className="cad-icon-btn cad-icon-btn-danger">
+              <Trash2 size={15} />
+            </button>
+          </div>
         </div>
       </div>
+
       <ConfirmDialog isOpen={del} title="Șterge activitatea?" message="Această acțiune nu poate fi anulată."
         onConfirm={() => { deleteActivity(activity.id); setDel(false); }} onCancel={() => setDel(false)} />
+
+      {showEdit && (
+        <ActivityForm
+          isOpen
+          onClose={() => setShowEdit(false)}
+          sector={sector}
+          locality={locality}
+          uat={uat}
+          finance={finance}
+          editActivity={activity}
+        />
+      )}
     </>
   );
 }

@@ -33,7 +33,9 @@ export default function UatPage({ financeId, uatId, onNav }) {
             <p className="text-xs text-slate-400 mt-1">{finance?.name}</p>
           </div>
         </div>
-        <Btn onClick={() => { setEditL(null); setShowForm(true); }}><Plus size={15} /> Localitate nouă</Btn>
+        <Btn onClick={() => { setEditL(null); setShowForm(true); }}>
+          <Plus size={15} /><span className="hidden sm:inline">Localitate nouă</span>
+        </Btn>
       </div>
 
       {localities.length > 0 && (

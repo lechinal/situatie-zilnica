@@ -30,9 +30,15 @@ export default function HierarchyCard({ icon: Icon, title, subtitle, stats, onSe
                 {subtitle && <div className="text-[11px] text-slate-400 mt-0.5">{subtitle}</div>}
               </div>
             </div>
-            <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }} className="cad-icon-btn">
-              <MoreHorizontal size={18} />
-            </button>
+            {/* Butoane acțiune */}
+            <div className="flex items-center gap-0.5 shrink-0 ml-1">
+              <button onClick={e => { e.stopPropagation(); onEdit(); }} className="cad-icon-btn" title="Editează">
+                <Pencil size={15} />
+              </button>
+              <button onClick={e => { e.stopPropagation(); setMenu(m => !m); }} className="cad-icon-btn" title="Mai multe">
+                <MoreHorizontal size={17} />
+              </button>
+            </div>
           </div>
           {stats && stats.length > 0 && (
             <div className="flex gap-2 mt-3 flex-wrap">
@@ -43,11 +49,7 @@ export default function HierarchyCard({ icon: Icon, title, subtitle, stats, onSe
           )}
         </div>
         {menu && (
-          <div ref={menuRef} onClick={e => e.stopPropagation()} className="absolute top-11 right-2.5 bg-white rounded-xl shadow-dropdown border border-slate-100 z-[50] min-w-[140px] overflow-hidden">
-            <button onClick={() => { setMenu(false); onEdit(); }}
-              className="flex gap-2 items-center w-full px-3.5 py-2.5 bg-transparent border-none cursor-pointer text-[13px] text-slate-700 hover:bg-slate-50 transition-colors duration-100">
-              <Pencil size={14} /> Editează
-            </button>
+          <div ref={menuRef} onClick={e => e.stopPropagation()} className="absolute top-11 right-2.5 bg-white rounded-xl shadow-dropdown border border-slate-100 z-[50] min-w-[130px] overflow-hidden">
             <button onClick={() => { setMenu(false); setDel(true); }}
               className="flex gap-2 items-center w-full px-3.5 py-2.5 bg-transparent border-none cursor-pointer text-[13px] text-red-600 hover:bg-red-50 transition-colors duration-100">
               <Trash2 size={14} /> Șterge

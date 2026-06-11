@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ClipboardList, MessageCircle, Check, Plus } from "lucide-react";
+import { ClipboardList, MessageCircle, Check, Plus, Pencil } from "lucide-react";
 import { useApp } from "../context/AppContext.jsx";
 import { Btn, StatMini, Empty, Breadcrumb, BackBtn, StatusBadge, ProgressBar } from "../components/ui/index.jsx";
 import ActivityItem from "../components/ActivityItem.jsx";
@@ -53,8 +53,12 @@ export default function SectorPage({ financeId, uatId, localityId, sectorId, onN
           </div>
         </div>
         <div className="flex gap-2">
-          <Btn variant="ghost" onClick={() => setShowEdit(true)}>Editează</Btn>
-          <Btn onClick={() => setShowAct(true)}><Plus size={15} /> Activitate</Btn>
+          <Btn variant="ghost" onClick={() => setShowEdit(true)}>
+            <Pencil size={15} /><span className="hidden sm:inline">Editează</span>
+          </Btn>
+          <Btn onClick={() => setShowAct(true)}>
+            <Plus size={15} /><span className="hidden sm:inline">Activitate</span>
+          </Btn>
         </div>
       </div>
 
