@@ -8,9 +8,9 @@ const NAV_ITEMS = [
   { id: "settings", label: "Setări", Icon: Settings },
 ];
 
-function Logo() {
+function Logo({ onNav }) {
   return (
-    <div className="flex items-center gap-2.5">
+    <div onClick={() => onNav?.("dashboard")} className="flex items-center gap-2.5 cursor-pointer">
       <img src={logoImg} alt="Logo" className="cad-logo-img" />
       <div>
         <div className="cad-logo-name">Cadastru Sistematic</div>
@@ -63,7 +63,7 @@ export default function Navigation({ page, onNav }) {
     <>
       <aside className="cad-sidebar">
         <div className="px-4 pt-5 pb-4 border-b border-slate-100">
-          <Logo />
+          <Logo onNav={onNav} />
         </div>
         <nav className="flex-1 p-3">
           <NavLinks activeId={activeId} onNav={onNav} />
@@ -74,7 +74,7 @@ export default function Navigation({ page, onNav }) {
       </aside>
 
       <div className="cad-topbar fixed top-0 left-0 right-0 z-[50] bg-white border-b border-slate-100 px-4 py-2.5 flex items-center justify-between">
-        <Logo />
+        <Logo onNav={onNav} />
         <button
           onClick={() => setMobileOpen(true)}
           className="cad-icon-btn p-1.5"
@@ -93,7 +93,7 @@ export default function Navigation({ page, onNav }) {
             className="w-60 bg-white h-full flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.12)] animate-slide-in-left"
           >
             <div className="px-4 pt-5 pb-3 border-b border-slate-100 flex items-center justify-between">
-              <Logo />
+              <Logo onNav={onNav} />
               <button
                 onClick={() => setMobileOpen(false)}
                 className="cad-icon-btn"
