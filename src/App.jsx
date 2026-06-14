@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { AppProvider } from "./context/AppContext.jsx";
+import { useApp } from "./context/AppContext.jsx";
 import Navigation from "./components/Navigation.jsx";
+import LoginModal from "./components/LoginModal.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import FinancePage from "./pages/FinancePage.jsx";
 import UatPage from "./pages/UatPage.jsx";
@@ -10,6 +12,7 @@ import StatisticsPage from "./pages/StatisticsPage.jsx";
 import SettingsPage from "./pages/SettingsPage.jsx";
 
 function AppContent() {
+  const { loading, currentUser } = useApp();
   const [route, setRoute] = useState({ page: "dashboard", params: {} });
   const nav = (page, params = {}) => { setRoute({ page, params }); window.scrollTo({ top: 0, behavior: "smooth" }); };
 
@@ -33,6 +36,7 @@ function AppContent() {
       <main className="cad-main flex-1 min-w-0 overflow-x-hidden">
         {renderPage()}
       </main>
+      {!loading && !currentUser && <LoginModal />}
     </div>
   );
 }

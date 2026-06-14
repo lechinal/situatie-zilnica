@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { LayoutDashboard, BarChart2, Settings, Menu, X } from "lucide-react";
+import { LayoutDashboard, BarChart2, Settings, Menu, X, LogOut } from "lucide-react";
 import logoImg from "../assets/images/logo/logo.jpeg";
 import SignatureAEA from "./SignatureAEA.jsx";
+import { useApp } from "../context/AppContext.jsx";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard },
@@ -52,6 +53,7 @@ function NavLinks({ activeId, onNav, onClickItem }) {
 }
 
 export default function Navigation({ page, onNav }) {
+  const { currentUser, logout } = useApp();
   const activeId = [
     "dashboard",
     "finance",
@@ -72,7 +74,17 @@ export default function Navigation({ page, onNav }) {
         <nav className="flex-1 p-3">
           <NavLinks activeId={activeId} onNav={onNav} />
         </nav>
-        <div className="px-4 py-3.5 border-t border-slate-100">
+        <div className="px-4 py-3.5 border-t border-slate-100 flex flex-col gap-2.5">
+          {currentUser && (
+            <button onClick={logout}
+              className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all duration-150 bg-transparent border-none cursor-pointer font-sans text-[13px] font-medium">
+              <div className="w-6 h-6 rounded-lg bg-teal-600 text-white flex items-center justify-center text-[11px] font-bold shrink-0">
+                {currentUser.charAt(0).toUpperCase()}
+              </div>
+              <span className="flex-1 text-left truncate">{currentUser}</span>
+              <LogOut size={14} />
+            </button>
+          )}
           <SignatureAEA />
         </div>
       </aside>
@@ -99,7 +111,17 @@ export default function Navigation({ page, onNav }) {
             <nav className="flex-1 p-2.5">
               <NavLinks activeId={activeId} onNav={onNav} onClickItem={() => setMobileOpen(false)} />
             </nav>
-            <div className="px-4 py-3 border-t border-slate-100">
+            <div className="px-4 py-3 border-t border-slate-100 flex flex-col gap-2">
+              {currentUser && (
+                <button onClick={() => { logout(); setMobileOpen(false); }}
+                  className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all duration-150 bg-transparent border-none cursor-pointer font-sans text-[13px] font-medium">
+                  <div className="w-6 h-6 rounded-lg bg-teal-600 text-white flex items-center justify-center text-[11px] font-bold shrink-0">
+                    {currentUser.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="flex-1 text-left truncate">{currentUser}</span>
+                  <LogOut size={14} />
+                </button>
+              )}
               <SignatureAEA />
             </div>
           </div>

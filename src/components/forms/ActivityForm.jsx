@@ -6,7 +6,7 @@ import { STATUS_OPTIONS, INTERVENTION_TYPES, EXTRA_ELEMENTS, OFFICE_TYPES, QUICK
 import { calcNewProgress, calcBetween, formatHours } from "../../utils/format.js";
 
 export default function ActivityForm({ isOpen, onClose, sector, locality, uat, finance, editActivity }) {
-  const { addActivity, updateActivity, colleagues } = useApp();
+  const { addActivity, updateActivity, colleagues, currentUser } = useApp();
   const today = new Date().toISOString().split("T")[0];
   const [f, setF] = useState({
     date: today, team: [], observations: "", progressPrev: sector?.progress || 0, progressToday: 0, sectorStatus: sector?.status || "În lucru",
@@ -106,7 +106,7 @@ export default function ActivityForm({ isOpen, onClose, sector, locality, uat, f
 
       <Field label="Echipă">
         <div className="flex gap-2 flex-wrap">
-          {colleagues.map(c => (
+          {colleagues.filter(c => c.name !== currentUser).map(c => (
             <button key={c.id} type="button" onClick={() => toggleTeam(c.name)}
               className={`px-3.5 py-1.5 rounded-[10px] text-[13px] font-semibold cursor-pointer border-none transition-all duration-150 font-sans ${
                 f.team.includes(c.name) ? "bg-teal-600 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
