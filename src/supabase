@@ -1,0 +1,66 @@
+VITE_SUPABASE_URL=https://mplbyiddseqqouanfswv.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_1-clGGk6rLTqudNEIHS_4w_-o2dfKSk
+
+-- SCHEMA SQL (ruleaza in Supabase SQL Editor)
+
+drop table if exists activities;
+drop table if exists sectors;
+drop table if exists localities;
+drop table if exists uats;
+drop table if exists finances;
+drop table if exists colleagues;
+
+create table finances (
+  id text primary key,
+  name text not null,
+  description text,
+  created_at timestamptz
+);
+
+create table uats (
+  id text primary key,
+  name text not null,
+  finance_id text references finances(id),
+  created_at timestamptz
+);
+
+create table localities (
+  id text primary key,
+  name text not null,
+  uat_id text references uats(id),
+  created_at timestamptz
+);
+
+create table sectors (
+  id text primary key,
+  locality_id text references localities(id),
+  sector_number text not null,
+  zone_type text,
+  status text,
+  progress numeric,
+  created_at timestamptz,
+  updated_at timestamptz
+);
+
+create table activities (
+  id text primary key,
+  sector_id text references sectors(id),
+  date date,
+  team text[],
+  observations text,
+  progress_prev numeric,
+  progress_today numeric,
+  progress_new numeric,
+  sector_status text,
+  field_hours numeric,
+  travel_hours numeric,
+  office_hours numeric,
+  field_activity jsonb,
+  office_activity jsonb,
+  created_at timestamptz
+);
+
+create table colleagues (
+  id text primary key,
+  name text not null
+);
