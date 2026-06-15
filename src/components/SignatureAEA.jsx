@@ -1,4 +1,4 @@
-import semnaturaImg from "../assets/images/semnatura/aea-black.png";
+import semnaturaImg from "../assets/images/semnatura/aea-black.svg";
 
 export default function SignatureAEA() {
   return (
